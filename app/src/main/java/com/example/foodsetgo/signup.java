@@ -50,22 +50,24 @@ public class signup extends AppCompatActivity {
         String temp_address=address.getText().toString();
         String temp_contact=contact.getText().toString();
         if(temp_name.isEmpty()==true)
-            Toast.makeText(this,"Please Enter Your Name",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Please Enter Your Name!",Toast.LENGTH_LONG).show();
         else
         if(temp_username.isEmpty()==true)
-            Toast.makeText(this,"Please Enter Your Username",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Please Enter Your Email!",Toast.LENGTH_LONG).show();
         else
         if(temp_password.isEmpty()==true)
-            Toast.makeText(this,"Please Enter Your Password",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Please Enter Your Password!",Toast.LENGTH_LONG).show();
         else
         if(temp_confirm.isEmpty()==true)
-            Toast.makeText(this,"Please Confirm Your Password",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Please Confirm Your Password!",Toast.LENGTH_LONG).show();
         else
         if(temp_address.isEmpty()==true)
-            Toast.makeText(this,"Please Enter Your Address",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Please Enter Your Address!",Toast.LENGTH_LONG).show();
         else
         if(temp_contact.isEmpty()==true)
-            Toast.makeText(this,"Please Enter Your Contact",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Please Enter Your Contact!",Toast.LENGTH_LONG).show();
+        else if(temp_password!=temp_confirm)
+            Toast.makeText(this,"The passwords do not match!",Toast.LENGTH_LONG).show();
         else
         {
             progressDialog.setMessage("Registering User...");

@@ -10,12 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import java.io.File;
 
-
-
-
-
 public class MainActivity extends AppCompatActivity {
-
 
  private Button signup;
  private Button signin;
@@ -42,10 +37,6 @@ public class MainActivity extends AppCompatActivity {
                 opensignup();
             }
         });
-
-
-
-
 
 
     }
