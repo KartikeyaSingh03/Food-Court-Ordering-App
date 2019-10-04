@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "359338416527",
+    "firebase_url": "https://foodsetgo-120b6.firebaseio.com",
+    "project_id": "foodsetgo-120b6",
+    "storage_bucket": "foodsetgo-120b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:359338416527:android:3c56c79a8728c2ef2553fa",
+        "android_client_info": {
+          "package_name": "com.example.foodsetgo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "359338416527-4paarvtlc5b92l6pfujni8mfs2l54iu8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAy1f63--LqlDMHX_kNkNvN93lJ5yMkD04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "359338416527-4paarvtlc5b92l6pfujni8mfs2l54iu8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
