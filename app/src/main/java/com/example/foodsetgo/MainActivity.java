@@ -19,8 +19,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        signin=(Button)findViewById(R.id.signin);
-        signup=(Button)findViewById(R.id.signup);
+        signin= findViewById(R.id.signin);
+        signup= findViewById(R.id.signup);
         signin.setOnClickListener(new View.OnClickListener() {
 
 
@@ -42,12 +42,12 @@ public class MainActivity extends AppCompatActivity {
     }
     public void opensignin()
     {
-        Intent i=new Intent(this, login.class);
+        Intent i=new Intent(MainActivity.this, login.class);
         startActivity(i);
     }
     public void opensignup()
     {
-        Intent i=new Intent(this, signup.class);
+        Intent i=new Intent(MainActivity.this, signup.class);
         startActivity(i);
     }
 
