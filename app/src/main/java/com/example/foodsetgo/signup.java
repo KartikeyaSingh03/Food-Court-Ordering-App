@@ -5,14 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-public class signup extends AppCompatActivity {
+import java.util.regex.Pattern;
 
+public class signup extends AppCompatActivity {
     EditText username;
     EditText password;
     EditText confirm_password;
@@ -36,6 +39,7 @@ public class signup extends AppCompatActivity {
 
 
     }
+
     public void Next()
     {
         String temp_username=username.getText().toString().trim();
@@ -51,8 +55,6 @@ public class signup extends AppCompatActivity {
             Toast.makeText(this,"Please Confirm Your Password!",Toast.LENGTH_LONG).show();
         else if(temp_confirm.equals(temp_password)==false) {
             Toast.makeText(this, "The passwords do not match!", Toast.LENGTH_LONG).show();
-            String s1= temp_password+"     "+temp_confirm;
-            username.setText(s1);
         }
         else
         {
@@ -61,11 +63,11 @@ public class signup extends AppCompatActivity {
     }
 
     public void moveToNext(){
-
+        String temp_username="",temp_password="";
         Intent i= new Intent(signup.this,SignUp1.class);
-        String temp_username=username.getText().toString().trim();
-        String temp_password=password.getText().toString().trim();
-        i.putExtra("username",temp_username);
+        temp_username = username.getText().toString().trim();
+        i.putExtra("username", temp_username);
+        temp_password=password.getText().toString().trim();
         i.putExtra("password",temp_password);
         startActivity(i);
     }
