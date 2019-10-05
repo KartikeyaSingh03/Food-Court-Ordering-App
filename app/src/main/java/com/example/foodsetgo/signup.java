@@ -38,9 +38,9 @@ public class signup extends AppCompatActivity {
     }
     public void Next()
     {
-        String temp_username=username.getText().toString();
-        String temp_password=password.getText().toString();
-        String temp_confirm=confirm_password.getText().toString();
+        String temp_username=username.getText().toString().trim();
+        String temp_password=password.getText().toString().trim();
+        String temp_confirm=confirm_password.getText().toString().trim();
         if(temp_username.isEmpty()==true)
             Toast.makeText(this,"Please Enter Your Email!",Toast.LENGTH_LONG).show();
         else
@@ -61,7 +61,13 @@ public class signup extends AppCompatActivity {
     }
 
     public void moveToNext(){
+
         Intent i= new Intent(signup.this,SignUp1.class);
+        String temp_username=username.getText().toString().trim();
+        String temp_password=password.getText().toString().trim();
+        i.putExtra("username",temp_username);
+        i.putExtra("password",temp_password);
+
         startActivity(i);
     }
 
