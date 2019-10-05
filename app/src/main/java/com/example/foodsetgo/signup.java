@@ -51,8 +51,6 @@ public class signup extends AppCompatActivity {
             Toast.makeText(this,"Please Confirm Your Password!",Toast.LENGTH_LONG).show();
         else if(temp_confirm.equals(temp_password)==false) {
             Toast.makeText(this, "The passwords do not match!", Toast.LENGTH_LONG).show();
-            String s1= temp_password+"     "+temp_confirm;
-            username.setText(s1);
         }
         else
         {
