@@ -67,7 +67,6 @@ public class signup extends AppCompatActivity {
         String temp_password=password.getText().toString().trim();
         i.putExtra("username",temp_username);
         i.putExtra("password",temp_password);
-
         startActivity(i);
     }
 
