@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -63,8 +64,8 @@ public class SignUp1 extends AppCompatActivity {
         if(temp_address.isEmpty()==true)
             Toast.makeText(this,"Please Enter Your Address!",Toast.LENGTH_LONG).show();
         else
-        if(temp_contact.isEmpty()==true)
-            Toast.makeText(this,"Please Enter Your Contact!",Toast.LENGTH_LONG).show();
+        if(temp_contact.isEmpty()==true||isValidContact(temp_contact)==false)
+            Toast.makeText(this,"Please Enter a Valid Contact!",Toast.LENGTH_LONG).show();
         else
         {
 
@@ -79,26 +80,27 @@ public class SignUp1 extends AppCompatActivity {
 
 
             root.child("Users").child(username).setValue(u)
-            .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful()==true)
-                    {
-                        Toast.makeText(SignUp1.this,"Registration Successful",Toast.LENGTH_LONG).show();
-                        progress.dismiss();
-                    }
-                    else
-                    {
-                        Toast.makeText(SignUp1.this,"Registration UnSuccessful",Toast.LENGTH_LONG).show();
-                        progress.dismiss();
+                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()==true)
+                            {
+                                Toast.makeText(SignUp1.this,"Registration Successful",Toast.LENGTH_LONG).show();
+                                progress.dismiss();
+                            }
+                            else
+                            {
+                                Toast.makeText(SignUp1.this,"Registration UnSuccessful",Toast.LENGTH_LONG).show();
+                                progress.dismiss();
 
-                    }
-                }
-            });
+                            }
+                        }
+                    });
             name.setText("");
             address.setText("");
             contact.setText("");
-
+            Intent i= new Intent(SignUp1.this,UserProfile.class);
+            startActivity(i);
         }
 
     }
@@ -118,6 +120,13 @@ public class SignUp1 extends AppCompatActivity {
         } catch(Exception ex){
             throw new RuntimeException(ex);
         }
+    }
+
+    public boolean isValidContact(String s){
+        if(s.length()==10)
+            return true;
+        else
+             return false;
     }
 
 }
