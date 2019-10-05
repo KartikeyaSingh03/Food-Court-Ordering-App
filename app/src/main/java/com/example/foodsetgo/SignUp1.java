@@ -1,5 +1,6 @@
 package com.example.foodsetgo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
@@ -9,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,12 +20,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.security.MessageDigest;
 
 public class SignUp1 extends AppCompatActivity {
+
     EditText name;
     EditText address;
     EditText contact;
     Button register;
-
-    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +43,8 @@ public class SignUp1 extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 Register(temp_username,pass);
             }
         });
@@ -64,13 +68,33 @@ public class SignUp1 extends AppCompatActivity {
         else
         {
 
-
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
+            final ProgressDialog progress=new ProgressDialog(SignUp1.this);
+            progress.setMessage("Registering...");
+            progress.show();
             User u=new User(temp_name,password,temp_contact,temp_address);
             DatabaseReference root=FirebaseDatabase.getInstance().getReference();
 
-            root.child("Users").child(username).setValue(u);
+
+
+
+            root.child("Users").child(username).setValue(u)
+            .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()==true)
+                    {
+                        Toast.makeText(SignUp1.this,"Registration Successful",Toast.LENGTH_LONG).show();
+                        progress.dismiss();
+                    }
+                    else
+                    {
+                        Toast.makeText(SignUp1.this,"Registration UnSuccessful",Toast.LENGTH_LONG).show();
+                        progress.dismiss();
+
+                    }
+                }
+            });
             name.setText("");
             address.setText("");
             contact.setText("");
