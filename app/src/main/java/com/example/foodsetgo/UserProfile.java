@@ -52,8 +52,8 @@ public class UserProfile extends AppCompatActivity {
             String personEmail = acct.getEmail();
             String personId = acct.getId();
 
-            nameTV.setText("Name: "+personName);
-            emailTV.setText("Email: "+personEmail);
+            nameTV.setText(personName);
+            emailTV.setText(personEmail);
         }
 
         sign_out.setOnClickListener(new View.OnClickListener() {

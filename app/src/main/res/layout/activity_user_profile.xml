@@ -6,32 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".UserProfile">
 
-    <LinearLayout
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/name"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:textSize="25sp"
+        android:textColor="#000000"
+        android:textStyle="bold"/>
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:id="@+id/email"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:layout_below="@id/name"/>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/name"
-            android:text="Name: NAME HERE"
-            android:textSize="18sp"
-            android:textColor="@color/colorPrimary"
-            android:layout_gravity="center"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/email"
-            android:text="Email: EMAIL HERE"
-            android:textSize="18sp"
-            android:textColor="@color/colorPrimary"
-            android:layout_gravity="center"/>
-
-    </LinearLayout>
 
 
     <Button

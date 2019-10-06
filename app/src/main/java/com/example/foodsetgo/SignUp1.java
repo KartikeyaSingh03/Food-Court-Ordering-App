@@ -66,40 +66,41 @@ public class SignUp1 extends AppCompatActivity {
         else
         if(temp_contact.isEmpty()==true||isValidContact(temp_contact)==false)
             Toast.makeText(this,"Please Enter a Valid Contact Number!",Toast.LENGTH_LONG).show();
-        else
-        {
-            temp_address=encodeFirebase(temp_address);
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-            final ProgressDialog progress=new ProgressDialog(SignUp1.this);
-            progress.setMessage("Registering...");
-            progress.show();
-            User u=new User(temp_name,password,temp_contact,temp_address);
-            DatabaseReference root=FirebaseDatabase.getInstance().getReference();
+        else {
+            try {
+                temp_address = encodeFirebase(temp_address);
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                //database.setPersistenceEnabled(true);
+                final ProgressDialog progress = new ProgressDialog(SignUp1.this);
+                progress.setMessage("Registering...");
+                progress.show();
+                User u = new User(temp_name, password, temp_contact, temp_address);
+                DatabaseReference root = database.getReference();
 
-            root.child("Users").child(username).setValue(u)
-                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()==true)
-                            {
-                                Toast.makeText(SignUp1.this,"Registration Successful",Toast.LENGTH_LONG).show();
-                                progress.dismiss();
-                            }
-                            else
-                            {
-                                Toast.makeText(SignUp1.this,"Registration UnSuccessful",Toast.LENGTH_LONG).show();
-                                progress.dismiss();
+                root.child("Users").child(username).setValue(u)
+                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful() == true) {
+                                    Toast.makeText(SignUp1.this, "Registration Successful", Toast.LENGTH_LONG).show();
+                                    progress.dismiss();
+                                } else {
+                                    Toast.makeText(SignUp1.this, "Registration UnSuccessful", Toast.LENGTH_LONG).show();
+                                    progress.dismiss();
 
+                                }
                             }
-                        }
-                    });
-            name.setText("");
-            address.setText("");
-            contact.setText("");
-            Intent i= new Intent(SignUp1.this,UserProfile.class);
-            startActivity(i);
+                        });
+                name.setText("");
+                address.setText("");
+                contact.setText("");
+                Intent i = new Intent(SignUp1.this, UserProfile.class);
+                startActivity(i);
+            }
+            catch (Exception e){
+                Toast.makeText(SignUp1.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
         }
-
     }
     public static String sha256(String base) {
         try{
