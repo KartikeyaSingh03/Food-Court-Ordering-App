@@ -1,5 +1,6 @@
 package com.example.foodsetgo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,6 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -17,15 +23,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.AuthResult;
+
+import java.security.MessageDigest;
 
 public class login extends AppCompatActivity {
     int RC_SIGN_IN=0;
     EditText username;
     EditText password;
     Button   Login;
+
     SignInButton signInButton;
     GoogleSignInClient mGoogleSignInClient;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +59,7 @@ public class login extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
+        signInButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 signIn();
@@ -65,8 +77,12 @@ public class login extends AppCompatActivity {
     }
 
     private void manualLogin(){
-        Intent i = new Intent(login.this,UserProfile.class);
-        startActivity(i);
+        final String temp_username=username.getText().toString().trim();
+        final String temp_password=password.getText().toString().trim();
+        final String pass=sha256(temp_password).trim();
+        final String hashedusername=sha256(temp_username);
+        //method call to check if user exists, and if exists, then redirect it to profile.
+        checklogin(hashedusername,pass);
     }
 
     private void signIn() {
@@ -90,6 +106,22 @@ public class login extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            //pushing user data to firebase.
+            final String personName=account.getDisplayName().trim();
+            final String personEmail=account.getEmail().trim();
+            final String personPassword="".trim();
+            final String personContact="".trim();
+            final String personAddress="".trim();
+            final String username=sha256(personEmail).trim();
+
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+            User u=new User(personName,personPassword,personContact,personAddress);
+            DatabaseReference root=FirebaseDatabase.getInstance().getReference();
+            root.child("Users").child(username).setValue(u);
+
+
+
             // Signed in successfully, show authenticated UI.
             startActivity(new Intent(login.this, UserProfile.class));
         } catch (ApiException e) {
@@ -110,5 +142,66 @@ public class login extends AppCompatActivity {
         }
         super.onStart();
     }
+
+
+    // method to check if user exists.
+    public void checklogin(final String temp_username, final String temp_password)
+    {
+        DatabaseReference root= FirebaseDatabase.getInstance().getReference();
+        root.child("Users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()==true)
+                {
+                    if(dataSnapshot.child(temp_username).exists()==true)
+                    {
+                        if(dataSnapshot.child(temp_username).child("password").getValue().toString().equals(temp_password))
+                        {
+                            Intent i=new Intent(login.this,UserProfile.class);
+                            startActivity(i);
+                        }
+                        else
+                        {
+                            Toast.makeText(login.this,"Invalid Password",Toast.LENGTH_LONG).show();
+
+
+                        }
+                    }
+                    else
+                    {
+                        Toast.makeText(login.this,"Invalid Username",Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+
+
+    // hash method for passwords
+    public static String sha256(String base) {
+        try{
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(base.getBytes("UTF-8"));
+            StringBuffer hexString = new StringBuffer();
+
+            for (int i = 0; i < hash.length; i++) {
+                String hex = Integer.toHexString(0xff & hash[i]);
+                if(hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+        } catch(Exception ex){
+            throw new RuntimeException(ex);
+        }
+    }
+
 
 }
