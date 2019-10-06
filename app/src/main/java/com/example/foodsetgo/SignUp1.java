@@ -37,7 +37,6 @@ public class SignUp1 extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         final String temp_username=bundle.getString("username");
-
         final String temp_password=bundle.getString("password");
         final String pass=sha256(temp_password).toString().trim();
 
