@@ -8,48 +8,45 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
-
- private Button signup;
- private Button signin;
+    Button customerBtn;
+    Button ownerBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        signin= findViewById(R.id.signin);
-        signup= findViewById(R.id.signup);
-        signin.setOnClickListener(new View.OnClickListener() {
+        customerBtn=(Button)findViewById(R.id.Customer);
+        ownerBtn=(Button)findViewById(R.id.Owner);
 
-
+        customerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                opensignin();
+                try {
+                    Intent i = new Intent(MainActivity.this, CustomerMain.class);
+                    startActivity(i);
+                }
+                catch(Exception e){
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
-
-        signup.setOnClickListener(new View.OnClickListener() {
+        ownerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                opensignup();
+                try {
+                    Intent i = new Intent(MainActivity.this, OwnerMain.class);
+                    startActivity(i);
+                }
+                catch(Exception e){
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
-
     }
-    public void opensignin()
-    {
-        Intent i=new Intent(MainActivity.this, login.class);
-        startActivity(i);
-    }
-    public void opensignup()
-    {
-        Intent i=new Intent(MainActivity.this, signup.class);
-        startActivity(i);
-    }
-
 
 }
