@@ -35,7 +35,7 @@ public class login extends AppCompatActivity {
     EditText username;
     EditText password;
     Button   Login;
-
+    int flag;
     SignInButton signInButton;
     GoogleSignInClient mGoogleSignInClient;
     @Override
@@ -80,7 +80,7 @@ public class login extends AppCompatActivity {
         final String temp_username=username.getText().toString().trim();
         final String temp_password=password.getText().toString().trim();
         final String pass=sha256(temp_password).trim();
-        final String hashedusername=sha256(temp_username);
+        final String hashedusername=encodeFirebase(temp_username);
         //method call to check if user exists, and if exists, then redirect it to profile.
         checklogin(hashedusername,pass);
     }
@@ -112,14 +112,14 @@ public class login extends AppCompatActivity {
             final String personPassword="".trim();
             final String personContact="".trim();
             final String personAddress="".trim();
-            final String username=sha256(personEmail).trim();
-
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            final String username=encodeFirebase(personEmail).trim();
 
             User u=new User(personName,personPassword,personContact,personAddress);
-            DatabaseReference root=FirebaseDatabase.getInstance().getReference();
-            root.child("Users").child(username).setValue(u);
 
+            DatabaseReference root=FirebaseDatabase.getInstance().getReference();
+            checklogin2(username);
+            if(flag==0)
+            root.child("GoogleUsers").child(username).setValue(u);
 
 
             // Signed in successfully, show authenticated UI.
@@ -203,5 +203,68 @@ public class login extends AppCompatActivity {
         }
     }
 
+
+    public static String encodeFirebase(String s) {
+        return s
+                .replace("-", "+")
+                .replace(".", ">")
+                .replace("/", "?")
+                .replace("_","=");
+    }
+
+    public static String decodeFirebase(String s) {
+        String res="";
+        for(int ni=0;ni<s.length();ni++) {
+            char nc = s.charAt(ni);
+            if (nc == '+') {
+                res += '-';
+            }
+            else if (nc == '>') {
+                res += '.';
+            }
+            else if (nc == '?') {
+                res += '/';
+            }
+            else if(nc == '='){
+                res+='_';
+            }
+            else {
+                res+=s.charAt(ni);
+            }
+        }
+        return res;
+    }
+
+
+
+    public void checklogin2(final String temp_username)
+    {
+        DatabaseReference root= FirebaseDatabase.getInstance().getReference();
+        root.child("GoogleUsers").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()==true)
+                {
+                    if(dataSnapshot.child(temp_username).exists()==true)
+                    {
+                        flag=1;
+                    }
+                    else
+                    {
+                        flag=0;
+                    }
+                }
+                else
+                {
+                    flag=0;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 }
