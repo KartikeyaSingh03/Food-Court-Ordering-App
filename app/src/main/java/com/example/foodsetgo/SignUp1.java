@@ -36,16 +36,17 @@ public class SignUp1 extends AppCompatActivity {
         register= findViewById(R.id.register);
         Bundle bundle = getIntent().getExtras();
 
-        final String temp_username=bundle.getString("username");
+        String temp_username=bundle.getString("username");
+        final  String username=sha256(temp_username).trim();
         final String temp_password=bundle.getString("password");
-        final String pass=sha256(temp_password).toString().trim();
+        final String pass=sha256(temp_password).trim();
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
-                Register(temp_username,pass);
+                Register(username,pass);
             }
         });
 
@@ -125,7 +126,7 @@ public class SignUp1 extends AppCompatActivity {
         if(s.length()==10)
             return true;
         else
-             return false;
+            return false;
     }
 
 }
