@@ -56,6 +56,10 @@ public class signup extends AppCompatActivity {
         else if(temp_confirm.equals(temp_password)==false) {
             Toast.makeText(this, "The passwords do not match!", Toast.LENGTH_LONG).show();
         }
+        else if(isValidEmail(temp_username)==false)
+            Toast.makeText(this, "Email ID is invalid", Toast.LENGTH_LONG).show();
+        else if(passStrength(temp_password)==false)
+            Toast.makeText(this, "Password must be at least 8 characters long, must contain a letter[a-z,A-Z], and a number[0-9]", Toast.LENGTH_LONG).show();
         else
         {
             moveToNext();
@@ -72,4 +76,27 @@ public class signup extends AppCompatActivity {
         startActivity(i);
     }
 
+    public static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    }
+
+    public static Boolean passStrength(String password){
+        boolean hasLetter = false;
+        boolean hasDigit = false;
+        if (password.length() >= 8) {
+            for (int i = 0; i < password.length(); i++) {
+                char x = password.charAt(i);
+                if (Character.isLetter(x)) {
+                    hasLetter = true;
+                }
+                else if (Character.isDigit(x)) {
+                    hasDigit = true;
+                }
+            }
+            if(hasLetter && hasDigit){
+                return true;
+            }
+        }
+        return false;
+    }
 }

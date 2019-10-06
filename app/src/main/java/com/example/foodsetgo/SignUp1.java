@@ -65,7 +65,7 @@ public class SignUp1 extends AppCompatActivity {
             Toast.makeText(this,"Please Enter Your Address!",Toast.LENGTH_LONG).show();
         else
         if(temp_contact.isEmpty()==true||isValidContact(temp_contact)==false)
-            Toast.makeText(this,"Please Enter a Valid Contact!",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Please Enter a Valid Contact Number!",Toast.LENGTH_LONG).show();
         else
         {
 
@@ -123,10 +123,13 @@ public class SignUp1 extends AppCompatActivity {
     }
 
     public boolean isValidContact(String s){
-        if(s.length()==10)
-            return true;
-        else
+        if(s.length()!=10)
             return false;
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)<'0'||s.charAt(i)>'9')
+                return false;
+        }
+        return true;
     }
 
 }
