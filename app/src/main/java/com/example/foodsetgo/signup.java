@@ -1,5 +1,6 @@
 package com.example.foodsetgo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
@@ -13,6 +14,13 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.regex.Pattern;
 
@@ -21,6 +29,8 @@ public class signup extends AppCompatActivity {
     EditText password;
     EditText confirm_password;
     Button   next;
+    int flag;
+
     private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +73,35 @@ public class signup extends AppCompatActivity {
             Toast.makeText(this, "Password must be at least 8 characters long, must contain a letter[a-z,A-Z], and a number[0-9]", Toast.LENGTH_LONG).show();
         else
         {
+            final String tusername=encodeFirebase(temp_username).trim();
+            final String tpass=sha256(temp_password).trim();
+            checklogin(tusername,tpass);
+            if(flag==0)
             moveToNext();
+            else
+            {
+                Intent i = new Intent(signup.this, UserProfile.class);
+                startActivity(i);
+
+            }
+        }
+    }
+
+    public static String sha256(String base) {
+        try{
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(base.getBytes("UTF-8"));
+            StringBuffer hexString = new StringBuffer();
+
+            for (int i = 0; i < hash.length; i++) {
+                String hex = Integer.toHexString(0xff & hash[i]);
+                if(hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+        } catch(Exception ex){
+            throw new RuntimeException(ex);
         }
     }
 
@@ -108,6 +146,70 @@ public class signup extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+
+
+    public static String encodeFirebase(String s) {
+        return s
+                .replace("-", "+")
+                .replace(".", ">")
+                .replace("/", "?")
+                .replace("_","=");
+    }
+
+    public static String decodeFirebase(String s) {
+        String res="";
+        for(int ni=0;ni<s.length();ni++) {
+            char nc = s.charAt(ni);
+            if (nc == '+') {
+                res += '-';
+            }
+            else if (nc == '>') {
+                res += '.';
+            }
+            else if (nc == '?') {
+                res += '/';
+            }
+            else if(nc == '='){
+                res+='_';
+            }
+            else {
+                res+=s.charAt(ni);
+            }
+        }
+        return res;
+    }
+
+
+
+    // method to check if user exists.
+    public void checklogin(final String temp_username, final String temp_password)
+    {
+        DatabaseReference root= FirebaseDatabase.getInstance().getReference();
+        root.child("Users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()==true)
+                {
+                    if(dataSnapshot.child(temp_username).exists()==true)
+                    {
+                        flag=1;
+                    }
+                    else
+                    {
+                        flag=0;
+                    }
+                }
+                else
+                    flag=0;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     }
