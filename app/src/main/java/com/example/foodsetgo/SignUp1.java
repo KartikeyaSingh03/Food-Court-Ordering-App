@@ -37,7 +37,7 @@ public class SignUp1 extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
 
         String temp_username=bundle.getString("username");
-        final  String username=sha256(temp_username).trim();
+        final  String username=encodeFirebase(temp_username).trim();
         final String temp_password=bundle.getString("password");
         final String pass=sha256(temp_password).trim();
 
@@ -55,29 +55,26 @@ public class SignUp1 extends AppCompatActivity {
 
     public void Register(String username,String password)
     {
-        final String temp_name=name.getText().toString().trim();
-        final String temp_address=address.getText().toString().trim();
-        final String temp_contact=contact.getText().toString().trim();
-        if(temp_name.isEmpty()==true)
+        String temp_name=name.getText().toString().trim();
+        String temp_address=address.getText().toString().trim();
+        String temp_contact=contact.getText().toString().trim();
+        if(temp_name.isEmpty()==true||isValidName(temp_name)==false)
             Toast.makeText(this,"Please Enter Your Name!",Toast.LENGTH_LONG).show();
         else
-        if(temp_address.isEmpty()==true)
+        if(temp_address.isEmpty()==true||isValidAdd(temp_address)==false)
             Toast.makeText(this,"Please Enter Your Address!",Toast.LENGTH_LONG).show();
         else
         if(temp_contact.isEmpty()==true||isValidContact(temp_contact)==false)
             Toast.makeText(this,"Please Enter a Valid Contact Number!",Toast.LENGTH_LONG).show();
         else
         {
-
+            temp_address=encodeFirebase(temp_address);
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             final ProgressDialog progress=new ProgressDialog(SignUp1.this);
             progress.setMessage("Registering...");
             progress.show();
             User u=new User(temp_name,password,temp_contact,temp_address);
             DatabaseReference root=FirebaseDatabase.getInstance().getReference();
-
-
-
 
             root.child("Users").child(username).setValue(u)
                     .addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -132,4 +129,53 @@ public class SignUp1 extends AppCompatActivity {
         return true;
     }
 
+    public boolean isValidName(String s){
+
+        for(int i=0;i<s.length();i++){
+            char c =s.charAt(i);
+            if(Character.isLetter(c)==false&&c!=' ')
+                return false;
+        }
+        return true;
+    }
+
+    public boolean isValidAdd(String s){
+        for(int i=0;i<s.length();i++){
+            char c =s.charAt(i);
+            if(Character.isLetter(c)==false&&c!='-'&&c!='/'&&Character.isDigit(c)==false&&c!=' '&&c!='('&&c!=')'&&c!='.'&&c!=',')
+                return false;
+        }
+        return true;
+    }
+
+    public static String encodeFirebase(String s) {
+        return s
+                .replace("-", "+")
+                .replace(".", ">")
+                .replace("/", "?")
+                .replace("_","=");
+    }
+
+    public static String decodeFirebase(String s) {
+        String res="";
+        for(int ni=0;ni<s.length();ni++) {
+            char nc = s.charAt(ni);
+            if (nc == '+') {
+                res += '-';
+            }
+            else if (nc == '>') {
+                res += '.';
+            }
+            else if (nc == '?') {
+                res += '/';
+            }
+            else if(nc == '='){
+                    res+='_';
+            }
+            else {
+                res+=s.charAt(ni);
+            }
+        }
+        return res;
+    }
 }

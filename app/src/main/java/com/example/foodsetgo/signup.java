@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.Base64;
 import java.util.regex.Pattern;
 
 public class signup extends AppCompatActivity {
@@ -56,7 +57,7 @@ public class signup extends AppCompatActivity {
         else if(temp_confirm.equals(temp_password)==false) {
             Toast.makeText(this, "The passwords do not match!", Toast.LENGTH_LONG).show();
         }
-        else if(isValidEmail(temp_username)==false)
+        else if(isValidEmail(temp_username)==false||EmailChar(temp_username)==false)
             Toast.makeText(this, "Email ID is invalid", Toast.LENGTH_LONG).show();
         else if(passStrength(temp_password)==false)
             Toast.makeText(this, "Password must be at least 8 characters long, must contain a letter[a-z,A-Z], and a number[0-9]", Toast.LENGTH_LONG).show();
@@ -80,6 +81,15 @@ public class signup extends AppCompatActivity {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
+    public boolean EmailChar(String s){
+        for(int i=0;i<s.length();i++){
+            char c =s.charAt(i);
+            if(Character.isLetter(c)==false&&Character.isDigit(c)==false&&c!='.'&&c!='_'&&c!='@')
+                return false;
+        }
+        return true;
+    }
+
     public static Boolean passStrength(String password){
         boolean hasLetter = false;
         boolean hasDigit = false;
@@ -99,4 +109,5 @@ public class signup extends AppCompatActivity {
         }
         return false;
     }
-}
+
+    }
