@@ -4,10 +4,93 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OwnerMain">
-    <TextView
+    tools:context=".MainActivity">
+
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Restaurant Owner Side"
-        android:textSize="30sp"/>
+        android:src="@drawable/main_image"
+        android:scaleType="centerCrop"
+        android:id="@+id/imageview"
+        android:alpha="0.4"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/mainfont"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginTop="80dp"
+        android:textSize="30dp"
+        android:text="Existing Account?"
+        android:id="@+id/ORtf"
+        android:gravity="center_horizontal"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:textSize="25dp"
+        android:textColor="#000000"
+        android:id="@+id/edit_email"
+        android:layout_marginLeft="30dp"
+        android:textColorHint="#696969"
+        android:layout_marginTop="140dp"
+        android:inputType="textEmailAddress"
+
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:textSize="25dp"
+        android:textColor="#000000"
+        android:id="@+id/edit_password"
+        android:layout_marginLeft="30dp"
+        android:textColorHint="#696969"
+        android:layout_below="@+id/edit_email"
+        android:layout_marginTop="10dp"
+        android:inputType="textPassword"
+
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:hint="Login"
+        android:textSize="20dp"
+        android:id="@+id/login"
+        android:layout_below="@+id/edit_password"
+        android:background="#d3d3d3"
+        android:textColorHint="#000000"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/mainfont"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_below="@id/login"
+        android:layout_marginTop="20dp"
+        android:textSize="30dp"
+        android:text="New to FoodSetGo ?"
+        android:id="@+id/new_owner"
+        android:gravity="center_horizontal"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:hint="SignUp"
+        android:textSize="20dp"
+        android:id="@+id/signup"
+        android:layout_below="@+id/new_owner"
+        android:background="#d3d3d3"
+        android:textColorHint="#000000"
+        />
+
 </RelativeLayout>
