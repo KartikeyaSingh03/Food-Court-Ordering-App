@@ -1,6 +1,7 @@
 package com.example.foodsetgo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
@@ -17,6 +18,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class RegistrationRestaurant1 extends AppCompatActivity {
     EditText name;
@@ -69,7 +75,8 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
             final ProgressDialog progress=new ProgressDialog(RegistrationRestaurant1.this);
             progress.setMessage("Registering...");
             progress.show();
-            final String menu="menu".trim();
+
+            ArrayList<fooditem> menu=new ArrayList<fooditem>();
 
             RestInfo R=new RestInfo(temp_name,password,temp_contact,temp_address,menu);
             DatabaseReference root=FirebaseDatabase.getInstance().getReference();

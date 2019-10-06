@@ -1,13 +1,16 @@
 package com.example.foodsetgo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RestInfo {
     private String name;
     private String password;
     private String contact;
     private String address;
-    private String menu;
+    private ArrayList<fooditem> menu;
 
-    public RestInfo(String name, String password, String contact, String address, String menu) {
+    public RestInfo(String name, String password, String contact, String address, ArrayList<fooditem> menu) {
         this.name = name;
         this.password = password;
         this.contact = contact;
@@ -31,7 +34,7 @@ public class RestInfo {
         return address;
     }
 
-    public String getMenu() {
+    public ArrayList<fooditem> getMenu() {
         return menu;
     }
 }
