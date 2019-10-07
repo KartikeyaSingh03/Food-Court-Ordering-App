@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.Task;
 public class UserProfile extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     Button sign_out;
+    Button change_pwd;
     TextView nameTV;
     TextView emailTV;
     TextView contactTV;
@@ -37,11 +38,12 @@ public class UserProfile extends AppCompatActivity {
         emailTV = findViewById(R.id.email);
         contactTV=findViewById(R.id.contact);
         addressTV=findViewById(R.id.address);
-        String name= bundle.getString("name");
-        String pass= bundle.getString("pass");
-        String contact= bundle.getString("contact");
-        String address= bundle.getString("address");
-        String email= decodeFirebase(bundle.getString("email"));
+        change_pwd=findViewById(R.id.ChangePwd);
+        final String name= bundle.getString("name");
+        final String pass= bundle.getString("pass");
+        final String contact= bundle.getString("contact");
+        final String address= bundle.getString("address");
+        final String email= decodeFirebase(bundle.getString("email"));
         nameTV.setText(name);
         emailTV.setText(email);
         contactTV.setText(contact);
@@ -71,6 +73,15 @@ public class UserProfile extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 signOut();
+            }
+        });
+
+        change_pwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i= new Intent(UserProfile.this,ChangePassword.class);
+                i.putExtra("username",email);
+                startActivity(i);
             }
         });
     }

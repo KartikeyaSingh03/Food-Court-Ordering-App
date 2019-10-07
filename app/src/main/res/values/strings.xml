@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">FoodSetGo</string>
-<string-array name="status">
-    <item>VEG</item>
-    <item>NON VEG</item>
-</string-array>
+    <string-array name="status">
+        <item>VEG</item>
+        <item>NON VEG</item>
+    </string-array>
 </resources>

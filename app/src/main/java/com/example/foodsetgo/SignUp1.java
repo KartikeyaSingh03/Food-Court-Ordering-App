@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.security.MessageDigest;
 
 public class SignUp1 extends AppCompatActivity {
-
     EditText name;
     EditText address;
     EditText contact;
@@ -49,8 +49,6 @@ public class SignUp1 extends AppCompatActivity {
                 Register(username,pass);
             }
         });
-
-
     }
 
     public void Register(String username,String password)
@@ -58,16 +56,15 @@ public class SignUp1 extends AppCompatActivity {
         String temp_name=name.getText().toString().trim();
         String temp_address=address.getText().toString().trim();
         String temp_contact=contact.getText().toString().trim();
-        if(temp_name.isEmpty()==true||isValidName(temp_name)==false)
-            Toast.makeText(this,"Please Enter Your Name!",Toast.LENGTH_LONG).show();
-        else
-        if(temp_address.isEmpty()==true||isValidAdd(temp_address)==false)
-            Toast.makeText(this,"Please Enter Your Address!",Toast.LENGTH_LONG).show();
-        else
-        if(temp_contact.isEmpty()==true||isValidContact(temp_contact)==false)
-            Toast.makeText(this,"Please Enter a Valid Contact Number!",Toast.LENGTH_LONG).show();
-        else {
-            try {
+        try {
+            if (temp_name.isEmpty() == true || isValidName(temp_name) == false)
+                Toast.makeText(this, "Please Enter Your Name!", Toast.LENGTH_LONG).show();
+            else if (temp_address.isEmpty() == true || isValidAdd(temp_address) == false)
+                Toast.makeText(this, "Please Enter Your Address!", Toast.LENGTH_LONG).show();
+            else if (temp_contact.isEmpty() == true || isValidContact(temp_contact) == false)
+                Toast.makeText(this, "Please Enter a Valid Contact Number!", Toast.LENGTH_LONG).show();
+            else {
+
                 temp_address = encodeFirebase(temp_address);
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 //database.setPersistenceEnabled(true);
@@ -76,7 +73,6 @@ public class SignUp1 extends AppCompatActivity {
                 progress.show();
                 User u = new User(temp_name, password, temp_contact, temp_address);
                 DatabaseReference root = database.getReference();
-
                 root.child("Users").child(username).setValue(u)
                         .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                             @Override
@@ -96,10 +92,12 @@ public class SignUp1 extends AppCompatActivity {
                 contact.setText("");
                 Intent i = new Intent(SignUp1.this, UserProfile.class);
                 startActivity(i);
+
+
             }
-            catch (Exception e){
-                Toast.makeText(SignUp1.this, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+        }
+        catch (Exception e){
+            Log.w("Signup1",e.getMessage());
         }
     }
     public static String sha256(String base) {
