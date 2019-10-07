@@ -82,7 +82,10 @@ public class login extends AppCompatActivity {
         final String pass=sha256(temp_password).trim();
         final String hashedusername=encodeFirebase(temp_username);
         //method call to check if user exists, and if exists, then redirect it to profile.
-        checklogin(hashedusername,pass);
+        if(temp_username.isEmpty()==false&&temp_password.isEmpty()==false)
+            checklogin(hashedusername,pass);
+        else
+            Toast.makeText(login.this,"Enter a Username/Password",Toast.LENGTH_LONG).show();
     }
 
     private void signIn() {
@@ -169,7 +172,7 @@ public class login extends AppCompatActivity {
                     }
                     else
                     {
-                        Toast.makeText(login.this,"Invalid Username",Toast.LENGTH_LONG).show();
+                        Toast.makeText(login.this,"Username Doesn't Exist",Toast.LENGTH_LONG).show();
                     }
                 }
             }
