@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.security.MessageDigest;
 
 public class SignUp1 extends AppCompatActivity {
-
     EditText name;
     EditText address;
     EditText contact;
@@ -77,12 +77,11 @@ public class SignUp1 extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     public void Register(final String username,final String password)
     {
+<<<<<<< HEAD
         final String temp_name=name.getText().toString().trim();
         final String temp_address=address.getText().toString().trim();
         final String temp_contact=contact.getText().toString().trim();
@@ -96,6 +95,21 @@ public class SignUp1 extends AppCompatActivity {
             Toast.makeText(this,"Please Enter a Valid Contact Number!",Toast.LENGTH_LONG).show();
         else {
             try {
+=======
+        String temp_name=name.getText().toString().trim();
+        String temp_address=address.getText().toString().trim();
+        String temp_contact=contact.getText().toString().trim();
+        try {
+            if (temp_name.isEmpty() == true || isValidName(temp_name) == false)
+                Toast.makeText(this, "Please Enter Your Name!", Toast.LENGTH_LONG).show();
+            else if (temp_address.isEmpty() == true || isValidAdd(temp_address) == false)
+                Toast.makeText(this, "Please Enter Your Address!", Toast.LENGTH_LONG).show();
+            else if (temp_contact.isEmpty() == true || isValidContact(temp_contact) == false)
+                Toast.makeText(this, "Please Enter a Valid Contact Number!", Toast.LENGTH_LONG).show();
+            else {
+
+                temp_address = encodeFirebase(temp_address);
+>>>>>>> 3619bf01746c23caf3bd5380d5c740b08ce12e5e
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 //database.setPersistenceEnabled(true);
                 final ProgressDialog progress = new ProgressDialog(SignUp1.this);
@@ -103,7 +117,6 @@ public class SignUp1 extends AppCompatActivity {
                 progress.show();
                 User u = new User(temp_name, password, temp_contact, temp_address);
                 DatabaseReference root = database.getReference();
-
                 root.child("Users").child(username).setValue(u)
                         .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                             @Override
@@ -126,12 +139,20 @@ public class SignUp1 extends AppCompatActivity {
                                 }
                             }
                         });
+<<<<<<< HEAD
+=======
+                name.setText("");
+                address.setText("");
+                contact.setText("");
+                Intent i = new Intent(SignUp1.this, UserProfile.class);
+                startActivity(i);
+>>>>>>> 3619bf01746c23caf3bd5380d5c740b08ce12e5e
 
 
             }
-            catch (Exception e){
-                Toast.makeText(SignUp1.this, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+        }
+        catch (Exception e){
+            Log.w("Signup1",e.getMessage());
         }
     }
     public static String sha256(String base) {
