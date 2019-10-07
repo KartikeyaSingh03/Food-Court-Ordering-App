@@ -37,8 +37,7 @@ public class additem extends AppCompatActivity {
         foodname=findViewById(R.id.foodname);
         price=findViewById(R.id.price);
         add=findViewById(R.id.additem);
-        final String itemname=foodname.getText().toString().trim();
-        final String itemprice=price.getText().toString().trim();
+
         ArrayAdapter<String> adapter =new ArrayAdapter<String>(additem.this,android.R.layout.simple_list_item_1,
                 getResources().getStringArray(R.array.status));
 
@@ -53,7 +52,8 @@ public class additem extends AppCompatActivity {
             public void onClick(View view) {
 
 
-
+                final String itemname=foodname.getText().toString().trim();
+                final String itemprice=price.getText().toString().trim();
                 final String username=bundle.getString("username").trim();
                 final fooditem temp = new fooditem(itemprice, text);
 
