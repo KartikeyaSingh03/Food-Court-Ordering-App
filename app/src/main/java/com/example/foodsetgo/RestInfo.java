@@ -31,6 +31,4 @@ public class RestInfo {
     public String getAddress() {
         return address;
     }
-
-
 }
