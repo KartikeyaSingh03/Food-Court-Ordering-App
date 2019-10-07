@@ -56,7 +56,7 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
 
     }
 
-    public void Register(String username,String password)
+    public void Register(final String username, String password)
     {
         final String temp_name=name.getText().toString().trim();
         final String temp_address=address.getText().toString().trim();
@@ -76,9 +76,7 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
             progress.setMessage("Registering...");
             progress.show();
 
-            ArrayList<fooditem> menu=new ArrayList<fooditem>();
-
-            RestInfo R=new RestInfo(temp_name,password,temp_contact,temp_address,menu);
+            RestInfo R=new RestInfo(temp_name,password,temp_contact,temp_address);
             DatabaseReference root=FirebaseDatabase.getInstance().getReference();
 
 
@@ -92,6 +90,10 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
                             {
                                 Toast.makeText(RegistrationRestaurant1.this,"Registration Successful",Toast.LENGTH_LONG).show();
                                 progress.dismiss();
+                                Intent i=new Intent(RegistrationRestaurant1.this,owners_options.class);
+                                i.putExtra("username",username);
+                                i.putExtra("name",temp_name);
+                                startActivity(i);
                             }
                             else
                             {

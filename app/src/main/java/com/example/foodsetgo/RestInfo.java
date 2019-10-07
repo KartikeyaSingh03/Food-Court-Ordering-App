@@ -8,14 +8,12 @@ public class RestInfo {
     private String password;
     private String contact;
     private String address;
-    private ArrayList<fooditem> menu;
 
-    public RestInfo(String name, String password, String contact, String address, ArrayList<fooditem> menu) {
+    public RestInfo(String name, String password, String contact, String address) {
         this.name = name;
         this.password = password;
         this.contact = contact;
         this.address = address;
-        this.menu = menu;
     }
 
     public String getName() {
@@ -34,7 +32,5 @@ public class RestInfo {
         return address;
     }
 
-    public ArrayList<fooditem> getMenu() {
-        return menu;
-    }
+
 }
