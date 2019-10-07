@@ -17,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.security.MessageDigest;
 
@@ -26,6 +27,7 @@ public class SignUp1 extends AppCompatActivity {
     EditText address;
     EditText contact;
     Button register;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +36,7 @@ public class SignUp1 extends AppCompatActivity {
         contact= findViewById(R.id.number);
         address= findViewById(R.id.address);
         register= findViewById(R.id.register);
-        Bundle bundle = getIntent().getExtras();
+        final Bundle bundle = getIntent().getExtras();
 
         String temp_username=bundle.getString("username");
         final  String username=encodeFirebase(temp_username).trim();
@@ -46,18 +48,44 @@ public class SignUp1 extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                Register(username,pass);
+                DatabaseReference root= FirebaseDatabase.getInstance().getReference();
+                root.child("Users").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            if(dataSnapshot.child(username).exists()==false)
+                            {
+                                Register(username,pass);
+
+                            }
+                            else
+                            {
+                                Toast.makeText(SignUp1.this,"Username Already Exist",Toast.LENGTH_LONG).show();
+
+                                Intent i = new Intent(SignUp1.this, signup.class);
+                                startActivity(i);
+                            }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
             }
         });
 
 
     }
 
-    public void Register(String username,String password)
+    public void Register(final String username,final String password)
     {
-        String temp_name=name.getText().toString().trim();
-        String temp_address=address.getText().toString().trim();
-        String temp_contact=contact.getText().toString().trim();
+        final String temp_name=name.getText().toString().trim();
+        final String temp_address=address.getText().toString().trim();
+        final String temp_contact=contact.getText().toString().trim();
         if(temp_name.isEmpty()==true||isValidName(temp_name)==false)
             Toast.makeText(this,"Please Enter Your Name!",Toast.LENGTH_LONG).show();
         else
@@ -68,7 +96,6 @@ public class SignUp1 extends AppCompatActivity {
             Toast.makeText(this,"Please Enter a Valid Contact Number!",Toast.LENGTH_LONG).show();
         else {
             try {
-                temp_address = encodeFirebase(temp_address);
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 //database.setPersistenceEnabled(true);
                 final ProgressDialog progress = new ProgressDialog(SignUp1.this);
@@ -84,6 +111,14 @@ public class SignUp1 extends AppCompatActivity {
                                 if (task.isSuccessful() == true) {
                                     Toast.makeText(SignUp1.this, "Registration Successful", Toast.LENGTH_LONG).show();
                                     progress.dismiss();
+                                    Intent i=new Intent(SignUp1.this,UserProfile.class);
+
+                                    i.putExtra("name",temp_name);
+                                    i.putExtra("email",username);
+                                    i.putExtra("contact",temp_contact);
+                                    i.putExtra("pass",password);
+                                    i.putExtra("address",temp_address);
+                                    startActivity(i);
                                 } else {
                                     Toast.makeText(SignUp1.this, "Registration UnSuccessful", Toast.LENGTH_LONG).show();
                                     progress.dismiss();
@@ -91,11 +126,8 @@ public class SignUp1 extends AppCompatActivity {
                                 }
                             }
                         });
-                name.setText("");
-                address.setText("");
-                contact.setText("");
-                Intent i = new Intent(SignUp1.this, UserProfile.class);
-                startActivity(i);
+
+
             }
             catch (Exception e){
                 Toast.makeText(SignUp1.this, e.getMessage(), Toast.LENGTH_LONG).show();
