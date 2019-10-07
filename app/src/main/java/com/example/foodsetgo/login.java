@@ -82,7 +82,10 @@ public class login extends AppCompatActivity {
         final String pass=sha256(temp_password).trim();
         final String hashedusername=encodeFirebase(temp_username);
         //method call to check if user exists, and if exists, then redirect it to profile.
-        checklogin(hashedusername,pass);
+        if(temp_username.isEmpty()==false&&temp_password.isEmpty()==false)
+            checklogin(hashedusername,pass);
+        else
+            Toast.makeText(login.this,"Enter a Username/Password",Toast.LENGTH_LONG).show();
     }
 
     private void signIn() {
@@ -157,7 +160,17 @@ public class login extends AppCompatActivity {
                     {
                         if(dataSnapshot.child(temp_username).child("password").getValue().toString().equals(temp_password))
                         {
+                            String temp_name,temp_contact,temp_address;
                             Intent i=new Intent(login.this,UserProfile.class);
+                            temp_name=dataSnapshot.child(temp_username).child("name").getValue().toString();
+                            temp_address=dataSnapshot.child(temp_username).child("address").getValue().toString();
+                            temp_contact=dataSnapshot.child(temp_username).child("contact").getValue().toString();
+                            i.putExtra("name",temp_name);
+                            i.putExtra("email",temp_username);
+                            i.putExtra("contact",temp_contact);
+                            i.putExtra("pass",temp_password);
+                            i.putExtra("address",temp_address);
+
                             startActivity(i);
                         }
                         else
@@ -169,7 +182,7 @@ public class login extends AppCompatActivity {
                     }
                     else
                     {
-                        Toast.makeText(login.this,"Invalid Username",Toast.LENGTH_LONG).show();
+                        Toast.makeText(login.this,"Username Doesn't Exist",Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -211,30 +224,6 @@ public class login extends AppCompatActivity {
                 .replace("/", "?")
                 .replace("_","=");
     }
-
-    public static String decodeFirebase(String s) {
-        String res="";
-        for(int ni=0;ni<s.length();ni++) {
-            char nc = s.charAt(ni);
-            if (nc == '+') {
-                res += '-';
-            }
-            else if (nc == '>') {
-                res += '.';
-            }
-            else if (nc == '?') {
-                res += '/';
-            }
-            else if(nc == '='){
-                res+='_';
-            }
-            else {
-                res+=s.charAt(ni);
-            }
-        }
-        return res;
-    }
-
 
 
     public void checklogin2(final String temp_username)

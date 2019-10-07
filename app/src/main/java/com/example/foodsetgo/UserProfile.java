@@ -24,17 +24,28 @@ public class UserProfile extends AppCompatActivity {
     Button sign_out;
     TextView nameTV;
     TextView emailTV;
-    TextView idTV;
+    TextView contactTV;
+    TextView addressTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-
+        Bundle bundle = getIntent().getExtras();
         sign_out = findViewById(R.id.log_out);
         nameTV = findViewById(R.id.name);
         emailTV = findViewById(R.id.email);
-
+        contactTV=findViewById(R.id.contact);
+        addressTV=findViewById(R.id.address);
+        String name= bundle.getString("name");
+        String pass= bundle.getString("pass");
+        String contact= bundle.getString("contact");
+        String address= bundle.getString("address");
+        String email= decodeFirebase(bundle.getString("email"));
+        nameTV.setText(name);
+        emailTV.setText(email);
+        contactTV.setText(contact);
+        addressTV.setText(address);
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -70,9 +81,32 @@ public class UserProfile extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Toast.makeText(UserProfile.this,"Successfully signed out",Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(UserProfile.this, MainActivity.class));
+                        startActivity(new Intent(UserProfile.this, CustomerMain.class));
                         finish();
                     }
                 });
+    }
+
+    public static String decodeFirebase(String s) {
+        String res="";
+        for(int ni=0;ni<s.length();ni++) {
+            char nc = s.charAt(ni);
+            if (nc == '+') {
+                res += '-';
+            }
+            else if (nc == '>') {
+                res += '.';
+            }
+            else if (nc == '?') {
+                res += '/';
+            }
+            else if(nc == '='){
+                res+='_';
+            }
+            else {
+                res+=s.charAt(ni);
+            }
+        }
+        return res;
     }
 }
