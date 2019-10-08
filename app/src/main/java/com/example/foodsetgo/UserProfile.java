@@ -27,7 +27,7 @@ public class UserProfile extends AppCompatActivity {
     TextView emailTV;
     TextView contactTV;
     TextView addressTV;
-
+    String name,pass,contact,address,email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +39,18 @@ public class UserProfile extends AppCompatActivity {
         contactTV=findViewById(R.id.contact);
         addressTV=findViewById(R.id.address);
         change_pwd=findViewById(R.id.ChangePwd);
-        final String name= bundle.getString("name");
-        final String pass= bundle.getString("pass");
-        final String contact= bundle.getString("contact");
-        final String address= bundle.getString("address");
-        final String email= decodeFirebase(bundle.getString("email"));
+        if(bundle!=null) {
+            if (!bundle.getString("name").isEmpty())
+                name = bundle.getString("name");
+            if (!bundle.getString("pass").isEmpty())
+                pass = bundle.getString("pass");
+            if (!bundle.getString("contact").isEmpty())
+                contact = bundle.getString("contact");
+            if (!bundle.getString("address").isEmpty())
+                address = bundle.getString("address");
+            if (!bundle.getString("email").isEmpty())
+                email = decodeFirebase(bundle.getString("email"));
+        }
         nameTV.setText(name);
         emailTV.setText(email);
         contactTV.setText(contact);

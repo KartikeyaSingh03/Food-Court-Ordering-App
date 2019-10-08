@@ -26,6 +26,7 @@ public class SignUp1 extends AppCompatActivity {
     EditText address;
     EditText contact;
     Button register;
+    FirebaseDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +36,7 @@ public class SignUp1 extends AppCompatActivity {
         address= findViewById(R.id.address);
         register= findViewById(R.id.register);
         Bundle bundle = getIntent().getExtras();
-
+        database = FirebaseDatabase.getInstance();
         String temp_username=bundle.getString("username");
         final  String username=encodeFirebase(temp_username).trim();
         final String temp_password=bundle.getString("password");
@@ -66,7 +67,6 @@ public class SignUp1 extends AppCompatActivity {
             else {
 
                 temp_address = encodeFirebase(temp_address);
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
                 //database.setPersistenceEnabled(true);
                 final ProgressDialog progress = new ProgressDialog(SignUp1.this);
                 progress.setMessage("Registering...");
@@ -97,7 +97,7 @@ public class SignUp1 extends AppCompatActivity {
             }
         }
         catch (Exception e){
-            Log.w("Signup1",e.getMessage());
+            Toast.makeText(SignUp1.this,e.getMessage(),Toast.LENGTH_LONG).show();
         }
     }
     public static String sha256(String base) {
