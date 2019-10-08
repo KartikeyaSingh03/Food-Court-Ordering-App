@@ -26,6 +26,7 @@ public class SignUp1 extends AppCompatActivity {
     EditText address;
     EditText contact;
     Button register;
+    String temp_password,temp_username;
     FirebaseDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +38,9 @@ public class SignUp1 extends AppCompatActivity {
         register= findViewById(R.id.register);
         Bundle bundle = getIntent().getExtras();
         database = FirebaseDatabase.getInstance();
-        String temp_username=bundle.getString("username");
+        temp_username=bundle.getString("username");
         final  String username=encodeFirebase(temp_username).trim();
-        final String temp_password=bundle.getString("password");
+        temp_password=bundle.getString("password");
         final String pass=sha256(temp_password).trim();
 
         register.setOnClickListener(new View.OnClickListener() {
@@ -91,8 +92,12 @@ public class SignUp1 extends AppCompatActivity {
                 address.setText("");
                 contact.setText("");
                 Intent i = new Intent(SignUp1.this, UserProfile.class);
+                i.putExtra("email",temp_username);
+                i.putExtra("pass",temp_password);
+                i.putExtra("contact",temp_contact);
+                i.putExtra("address",decodeFirebase(temp_address));
+                i.putExtra("name",temp_name);
                 startActivity(i);
-
 
             }
         }
