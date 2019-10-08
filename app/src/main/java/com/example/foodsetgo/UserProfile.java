@@ -88,6 +88,10 @@ public class UserProfile extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i= new Intent(UserProfile.this,ChangePassword.class);
                 i.putExtra("username",email);
+                i.putExtra("password",pass);
+                i.putExtra("contact",contact);
+                i.putExtra("address",address);
+                i.putExtra("name",name);
                 startActivity(i);
             }
         });
