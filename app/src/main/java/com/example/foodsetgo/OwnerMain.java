@@ -61,7 +61,8 @@ public class OwnerMain extends AppCompatActivity {
                     {
                         if(dataSnapshot.child(temp_username).child("password").getValue().toString().equals(temp_password))
                         {
-                            Intent i=new Intent(OwnerMain.this,UserProfile.class);
+                            Intent i=new Intent(OwnerMain.this,owners_options.class);
+                            i.putExtra("username",temp_username);
                             startActivity(i);
                         }
                         else

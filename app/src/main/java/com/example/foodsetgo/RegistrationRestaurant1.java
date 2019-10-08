@@ -14,8 +14,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -48,8 +51,7 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
-                Register(username,pass);
+                check(username,temp_password);
             }
         });
 
@@ -133,6 +135,31 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
             return true;
         else
             return false;
+    }
+
+    public void check(final String username,final String password)
+    {
+        final DatabaseReference root=FirebaseDatabase.getInstance().getReference();
+        root.child("Restaurants").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(username).exists()==false)
+                {
+                    Register(username,password);
+                }
+                else
+                {
+                    Toast.makeText(RegistrationRestaurant1.this,"Already Registered Please Try Login",Toast.LENGTH_LONG).show();
+                    Intent i=new Intent(RegistrationRestaurant1.this,RegistrationRestaurant.class);
+                    startActivity(i);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }
