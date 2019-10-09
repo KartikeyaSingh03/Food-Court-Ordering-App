@@ -1,6 +1,7 @@
 package com.example.foodsetgo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -54,7 +55,10 @@ public class owners_options extends AppCompatActivity {
         menulist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent i= new Intent(owners_options.this, RecyclerView_for_owners.class);
+                i.putExtra("username",bundle.getString("username"));
 
+                startActivity(i);
             }
         });
 

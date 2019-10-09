@@ -1,20 +1,31 @@
 package com.example.foodsetgo;
 
 public class fooditem {
-    String price;
+    private String Name;
+    private String Price;
+    private String Status;
 
-    public fooditem(String price, String status) {
-        this.price = price;
-        this.status = status;
+    public fooditem(String name, String price, String status) {
+        Name = name;
+        Price = price;
+        Status = status;
+    }
+    public fooditem()
+    {
+
     }
 
-    String status;
+    public String getName() {
+        return Name;
+    }
 
     public String getPrice() {
-        return price;
+        return Price;
     }
 
     public String getStatus() {
-        return status;
+        return Status;
     }
 }
+
+

@@ -46,19 +46,22 @@ public class additem extends AppCompatActivity {
         spinner.setAdapter(adapter);
 
 
-        final String text=spinner.getSelectedItem().toString().trim();
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                final String text=spinner.getSelectedItem().toString().trim();
 
                 final String itemname=foodname.getText().toString().trim();
                 final String itemprice=price.getText().toString().trim();
                 final String username=bundle.getString("username").trim();
-                final fooditem temp = new fooditem(itemprice, text);
+                final fooditem temp = new fooditem(itemname,itemprice, text);
 
                 DatabaseReference root=FirebaseDatabase.getInstance().getReference();
-                   root.child("Restaurants").child(username).child("menu").child(itemname).setValue(temp);
+                   root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Name").setValue(temp.getName() );
+                   root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Price").setValue(temp.getPrice());
+                   root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Status").setValue(temp.getStatus());
+
 
 
             }
