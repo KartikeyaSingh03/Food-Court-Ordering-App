@@ -61,18 +61,26 @@ public class EditDetails extends AppCompatActivity {
                         final ProgressDialog progress = new ProgressDialog(EditDetails.this);
                         progress.setMessage("Editing Details...");
                         progress.show();
-                        root.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+                        root.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                String newPass= dataSnapshot.child(username).child("password").getValue().toString();
-                                User newUser = new User(newName, newPass, newContact, encodeFirebase(newAdd));
-                                root.child("Users").child(username).removeValue();
-                                root.child("Users").child(encodeFirebase(newEmail)).setValue(newUser);
-                                Toast.makeText(EditDetails.this, "Details Edited Successfully!", Toast.LENGTH_LONG).show();
-                                progress.dismiss();
-                                Intent i = new Intent(EditDetails.this, UserProfile.class);
-                                i.putExtra("email", encodeFirebase(newEmail));
-                                startActivity(i);
+                                if(dataSnapshot.child("Users").child(encodeFirebase(newEmail)).exists()){
+                                    Toast.makeText(EditDetails.this,"The username already exists",Toast.LENGTH_LONG).show();
+                                    progress.dismiss();
+                                    Intent i = new Intent(EditDetails.this,UserProfile.class);
+                                    i.putExtra("email",username);
+                                }
+                                else {
+                                    String newPass = dataSnapshot.child("Users").child(username).child("password").getValue().toString();
+                                    User newUser = new User(newName, newPass, newContact, encodeFirebase(newAdd));
+                                    root.child("Users").child(username).removeValue();
+                                    root.child("Users").child(encodeFirebase(newEmail)).setValue(newUser);
+                                    Toast.makeText(EditDetails.this, "Details Edited Successfully!", Toast.LENGTH_LONG).show();
+                                    progress.dismiss();
+                                    Intent i = new Intent(EditDetails.this, UserProfile.class);
+                                    i.putExtra("email", encodeFirebase(newEmail));
+                                    startActivity(i);
+                                }
                             }
 
                             @Override

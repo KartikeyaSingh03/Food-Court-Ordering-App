@@ -18,6 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.security.MessageDigest;
 
@@ -53,7 +54,7 @@ public class SignUp1 extends AppCompatActivity {
         });
     }
 
-    public void Register(String username,String password)
+    public void Register(final String username, String password)
     {
         String temp_name=name.getText().toString().trim();
         String temp_address=address.getText().toString().trim();
@@ -72,28 +73,47 @@ public class SignUp1 extends AppCompatActivity {
                 final ProgressDialog progress = new ProgressDialog(SignUp1.this);
                 progress.setMessage("Registering...");
                 progress.show();
-                User u = new User(temp_name, password, temp_contact, temp_address);
-                DatabaseReference root = database.getReference();
-                root.child("Users").child(username).setValue(u)
-                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful() == true) {
-                                    Toast.makeText(SignUp1.this, "Registration Successful", Toast.LENGTH_LONG).show();
-                                    progress.dismiss();
-                                } else {
-                                    Toast.makeText(SignUp1.this, "Registration UnSuccessful", Toast.LENGTH_LONG).show();
-                                    progress.dismiss();
+                final User u = new User(temp_name, password, temp_contact, temp_address);
+                final DatabaseReference root = database.getReference();
+                root.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.child("Users").child(username).exists()){
+                            Toast.makeText(SignUp1.this,"The username is already taken",Toast.LENGTH_LONG).show();
+                            progress.dismiss();
+                            Intent i =new Intent(SignUp1.this,signup.class);
+                            startActivity(i);
+                        }
+                        else{
+                            root.child("Users").child(username).setValue(u)
+                                    .addOnCompleteListener(SignUp1.this, new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful() == true) {
+                                                Toast.makeText(SignUp1.this, "Registration Successful", Toast.LENGTH_LONG).show();
+                                                progress.dismiss();
+                                            } else {
+                                                Toast.makeText(SignUp1.this, "Registration UnSuccessful", Toast.LENGTH_LONG).show();
+                                                progress.dismiss();
 
-                                }
-                            }
-                        });
-                name.setText("");
-                address.setText("");
-                contact.setText("");
-                Intent i = new Intent(SignUp1.this, UserProfile.class);
-                i.putExtra("email",username);
-                startActivity(i);
+                                            }
+                                        }
+                                    });
+                            name.setText("");
+                            address.setText("");
+                            contact.setText("");
+                            Intent i = new Intent(SignUp1.this, UserProfile.class);
+                            i.putExtra("email",username);
+                            startActivity(i);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
 
             }
         }
