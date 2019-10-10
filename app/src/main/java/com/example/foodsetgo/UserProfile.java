@@ -18,11 +18,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class UserProfile extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     Button sign_out;
     Button change_pwd;
+    Button Edit;
     TextView nameTV;
     TextView emailTV;
     TextView contactTV;
@@ -39,22 +45,30 @@ public class UserProfile extends AppCompatActivity {
         contactTV=findViewById(R.id.contact);
         addressTV=findViewById(R.id.address);
         change_pwd=findViewById(R.id.ChangePwd);
+        Edit =findViewById(R.id.EditProfile);
         if(bundle!=null) {
-            if (!bundle.getString("name").isEmpty())
-                name = bundle.getString("name");
-            if (!bundle.getString("pass").isEmpty())
-                pass = bundle.getString("pass");
-            if (!bundle.getString("contact").isEmpty())
-                contact = bundle.getString("contact");
-            if (!bundle.getString("address").isEmpty())
-                address = bundle.getString("address");
             if (!bundle.getString("email").isEmpty())
-                email = decodeFirebase(bundle.getString("email"));
+                email = bundle.getString("email");
         }
-        nameTV.setText(name);
-        emailTV.setText(email);
-        contactTV.setText(contact);
-        addressTV.setText(address);
+        DatabaseReference root = FirebaseDatabase.getInstance().getReference();
+        root.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                name = dataSnapshot.child("Users").child(email).child("name").getValue().toString();
+                address= decodeFirebase(dataSnapshot.child("Users").child(email).child("address").getValue().toString());
+                contact=dataSnapshot.child("Users").child(email).child("contact").getValue().toString();
+                nameTV.setText(name);
+                emailTV.setText(decodeFirebase(email));
+                contactTV.setText(contact);
+                addressTV.setText(address);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(UserProfile.this,"Not Retriving",Toast.LENGTH_LONG).show();
+            }
+        });
+
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -88,10 +102,15 @@ public class UserProfile extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i= new Intent(UserProfile.this,ChangePassword.class);
                 i.putExtra("username",email);
-                i.putExtra("password",pass);
-                i.putExtra("contact",contact);
-                i.putExtra("address",address);
-                i.putExtra("name",name);
+                startActivity(i);
+            }
+        });
+
+        Edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i =new Intent(UserProfile.this,EditDetails.class);
+                i.putExtra("Email",email);
                 startActivity(i);
             }
         });

@@ -92,11 +92,7 @@ public class SignUp1 extends AppCompatActivity {
                 address.setText("");
                 contact.setText("");
                 Intent i = new Intent(SignUp1.this, UserProfile.class);
-                i.putExtra("email",temp_username);
-                i.putExtra("pass",temp_password);
-                i.putExtra("contact",temp_contact);
-                i.putExtra("address",decodeFirebase(temp_address));
-                i.putExtra("name",temp_name);
+                i.putExtra("email",username);
                 startActivity(i);
 
             }
