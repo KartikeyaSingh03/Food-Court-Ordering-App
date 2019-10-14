@@ -34,6 +34,7 @@ public class UserProfile extends AppCompatActivity {
     TextView contactTV;
     TextView addressTV;
     String name,pass,contact,address,email;
+    Boolean flag=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,20 +48,24 @@ public class UserProfile extends AppCompatActivity {
         change_pwd=findViewById(R.id.ChangePwd);
         Edit =findViewById(R.id.EditProfile);
         if(bundle!=null) {
-            if (!bundle.getString("email").isEmpty())
+            if (!bundle.getString("email").isEmpty()){
                 email = bundle.getString("email");
+                flag = true;
+            }
         }
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
         root.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                name = dataSnapshot.child("Users").child(email).child("name").getValue().toString();
-                address= decodeFirebase(dataSnapshot.child("Users").child(email).child("address").getValue().toString());
-                contact=dataSnapshot.child("Users").child(email).child("contact").getValue().toString();
-                nameTV.setText(name);
-                emailTV.setText(decodeFirebase(email));
-                contactTV.setText(contact);
-                addressTV.setText(address);
+                if(flag){
+                    name = dataSnapshot.child("Users").child(email).child("name").getValue().toString();
+                    address= decodeFirebase(dataSnapshot.child("Users").child(email).child("address").getValue().toString());
+                    contact=dataSnapshot.child("Users").child(email).child("contact").getValue().toString();
+                    nameTV.setText(name);
+                    emailTV.setText(decodeFirebase(email));
+                    contactTV.setText(contact);
+                    addressTV.setText(address);
+                }
             }
 
             @Override
@@ -81,11 +86,7 @@ public class UserProfile extends AppCompatActivity {
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(UserProfile.this);
         if (acct != null) {
             String personName = acct.getDisplayName();
-            String personGivenName = acct.getGivenName();
-            String personFamilyName = acct.getFamilyName();
             String personEmail = acct.getEmail();
-            String personId = acct.getId();
-
             nameTV.setText(personName);
             emailTV.setText(personEmail);
         }
@@ -100,9 +101,14 @@ public class UserProfile extends AppCompatActivity {
         change_pwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i= new Intent(UserProfile.this,ChangePassword.class);
-                i.putExtra("username",email);
-                startActivity(i);
+                if(flag){
+                    Intent i= new Intent(UserProfile.this,ChangePassword.class);
+                    i.putExtra("username",email);
+                    startActivity(i);
+                }
+                else{
+                    Toast.makeText(UserProfile.this,"Google Users cannot change password",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
