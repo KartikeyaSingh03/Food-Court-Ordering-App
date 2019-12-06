@@ -70,7 +70,7 @@ public class signup extends AppCompatActivity {
         else if(isValidEmail(temp_username)==false||EmailChar(temp_username)==false)
             Toast.makeText(this, "Email ID is invalid", Toast.LENGTH_LONG).show();
         else if(passStrength(temp_password)==false)
-            Toast.makeText(this, "Password must be at least 8 characters long, must contain a letter[a-z,A-Z], and a number[0-9]", Toast.LENGTH_LONG).show();
+           Toast.makeText(this, "Password must be at least 8 characters long, must contain a letter[a-z,A-Z], and a number[0-9]", Toast.LENGTH_LONG).show();
         else
         {
             final String tusername=encodeFirebase(temp_username).trim();

@@ -4,4 +4,8 @@
         <item>VEG</item>
         <item>NON VEG</item>
     </string-array>
+    <string name="title_activity_user_side">UserSide</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
