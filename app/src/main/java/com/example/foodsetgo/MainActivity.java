@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         customerBtn=(Button)findViewById(R.id.Customer);
         ownerBtn=(Button)findViewById(R.id.Owner);
-
         customerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

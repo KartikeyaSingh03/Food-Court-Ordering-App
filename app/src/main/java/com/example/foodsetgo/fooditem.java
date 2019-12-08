@@ -4,15 +4,16 @@ public class fooditem {
     private String Name;
     private String Price;
     private String Status;
+    private String ImgUrl;
 
-    public fooditem(String name, String price, String status) {
+
+    public fooditem()
+    {}
+    public fooditem(String name, String price, String status, String imgUrl) {
         Name = name;
         Price = price;
         Status = status;
-    }
-    public fooditem()
-    {
-
+        ImgUrl = imgUrl;
     }
 
     public String getName() {
@@ -26,6 +27,11 @@ public class fooditem {
     public String getStatus() {
         return Status;
     }
+
+    public String getImgUrl() {
+        return ImgUrl;
+    }
+
 }
 
 

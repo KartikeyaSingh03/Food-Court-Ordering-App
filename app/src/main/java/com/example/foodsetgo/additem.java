@@ -55,7 +55,7 @@ public class additem extends AppCompatActivity {
                 final String itemname=foodname.getText().toString().trim();
                 final String itemprice=price.getText().toString().trim();
                 final String username=bundle.getString("username").trim();
-                final fooditem temp = new fooditem(itemname,itemprice, text);
+                final fooditem temp = new fooditem(itemname,itemprice, text,"");
 
                 DatabaseReference root=FirebaseDatabase.getInstance().getReference();
                    root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Name").setValue(temp.getName() );

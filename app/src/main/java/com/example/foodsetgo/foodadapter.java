@@ -1,14 +1,28 @@
 package com.example.foodsetgo;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
+import java.net.URL;
 import java.util.List;
 
 public class foodadapter extends RecyclerView.Adapter<foodadapter.ViewHolder> {
@@ -31,9 +45,28 @@ public class foodadapter extends RecyclerView.Adapter<foodadapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        fooditem listmenu=listmenus.get(position);
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        final fooditem listmenu=listmenus.get(position);
         holder.foodname.setText(listmenu.getName());
+        FirebaseStorage storage=FirebaseStorage.getInstance();
+        StorageReference storageRef=storage.getReferenceFromUrl("gs://foodsetgo-120b6.appspot.com");
+        storageRef.child("images/"+listmenu.getName()+".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
+               final String strurl=uri.toString();
+                Picasso.get().load(strurl).into(holder.imageView);
+
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                holder.foodname.setText("hello2");
+
+            }
+        });
 
 
     }
@@ -46,9 +79,14 @@ public class foodadapter extends RecyclerView.Adapter<foodadapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         public TextView foodname;
+        public ImageView imageView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            foodname=itemView.findViewById(R.id.name);
+            foodname=itemView.findViewById(R.id.foodname);
+            imageView=itemView.findViewById(R.id.foodimage);
         }
     }
+
+
 }
+
