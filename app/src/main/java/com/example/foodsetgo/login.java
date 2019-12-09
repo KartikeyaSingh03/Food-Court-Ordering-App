@@ -3,6 +3,7 @@ package com.example.foodsetgo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +38,7 @@ public class login extends AppCompatActivity {
     EditText password;
     Button   Login;
     int flag;
+    private FirebaseAuth firebaseAuth;
     SignInButton signInButton;
     GoogleSignInClient mGoogleSignInClient;
     @Override
@@ -48,10 +51,16 @@ public class login extends AppCompatActivity {
         signInButton = (SignInButton)findViewById(R.id.sign_in_button);
         String user_name = username.getText().toString();
         String pwd=password.getText().toString();
-        signInButton = findViewById(R.id.sign_in_button);
-
+        firebaseAuth =FirebaseAuth.getInstance();
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        if(firebaseAuth.getCurrentUser() != null){
+            //close this activity
+            finish();
+            //opening profile activity
+            startActivity(new Intent(getApplicationContext(), UserProfile.class));
+        }
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -79,11 +88,9 @@ public class login extends AppCompatActivity {
     private void manualLogin(){
         final String temp_username=username.getText().toString().trim();
         final String temp_password=password.getText().toString().trim();
-        final String pass=sha256(temp_password).trim();
-        final String hashedusername=encodeFirebase(temp_username);
         //method call to check if user exists, and if exists, then redirect it to profile.
         if(temp_username.isEmpty()==false&&temp_password.isEmpty()==false)
-            checklogin(hashedusername,pass);
+            checklogin(temp_username,temp_password);
         else
             Toast.makeText(login.this,"Enter a Username/Password",Toast.LENGTH_LONG).show();
     }
@@ -112,17 +119,16 @@ public class login extends AppCompatActivity {
             //pushing user data to firebase.
             final String personName=account.getDisplayName().trim();
             final String personEmail=account.getEmail().trim();
-            final String personPassword="".trim();
             final String personContact="".trim();
             final String personAddress="".trim();
-            final String username=encodeFirebase(personEmail).trim();
-
-            User u=new User(personName,personPassword,personContact,personAddress);
+            final String username=personEmail.trim();
+            final String personId = account.getId();
+            User u=new User(personName,personContact,personAddress);
 
             DatabaseReference root=FirebaseDatabase.getInstance().getReference();
-            checklogin2(username);
+            checklogin2(personId);
             if(flag==0)
-            root.child("GoogleUsers").child(username).setValue(u);
+                root.child("GoogleUsers").child(username).setValue(u);
 
 
             // Signed in successfully, show authenticated UI.
@@ -150,80 +156,56 @@ public class login extends AppCompatActivity {
     // method to check if user exists.
     public void checklogin(final String temp_username, final String temp_password)
     {
+        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        final ProgressDialog progressDialog =new ProgressDialog(login.this);
+        progressDialog.setMessage("Signing in...");
+        progressDialog.show();
+        //logging in the user
+        firebaseAuth.signInWithEmailAndPassword(temp_username, temp_password)
+                .addOnCompleteListener(login.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        //if the task is successful
+                        if(task.isSuccessful()){
+                            //start the profile activity
+                            DatabaseReference root = firebaseDatabase.getReference();
+                            root.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                    if(currentuser.isEmpty()){
+                                        Toast.makeText(login.this,"Error",Toast.LENGTH_LONG).show();
+                                    }
+                                    else {
+                                        finish();
+                                        startActivity(new Intent(getApplicationContext(), UserProfile.class));
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                        else{
+                            Toast.makeText(login.this,"Incorrect credentials",Toast.LENGTH_LONG).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                });
+    }
+
+
+    public void checklogin2(final String temp_id)
+    {
         DatabaseReference root= FirebaseDatabase.getInstance().getReference();
         root.child("Users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()==true)
                 {
-                    if(dataSnapshot.child(temp_username).exists()==true)
-                    {
-                        if(dataSnapshot.child(temp_username).child("password").getValue().toString().equals(temp_password))
-                        {
-                            Intent i=new Intent(login.this,UserProfile.class);
-                            i.putExtra("email",temp_username);
-                            startActivity(i);
-                        }
-                        else
-                        {
-                            Toast.makeText(login.this,"Invalid Password",Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    else
-                    {
-                        Toast.makeText(login.this,"Username Doesn't Exist",Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-
-
-    // hash method for passwords
-    public static String sha256(String base) {
-        try{
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(base.getBytes("UTF-8"));
-            StringBuffer hexString = new StringBuffer();
-
-            for (int i = 0; i < hash.length; i++) {
-                String hex = Integer.toHexString(0xff & hash[i]);
-                if(hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-
-            return hexString.toString();
-        } catch(Exception ex){
-            throw new RuntimeException(ex);
-        }
-    }
-
-
-    public static String encodeFirebase(String s) {
-        return s
-                .replace("-", "+")
-                .replace(".", ">")
-                .replace("/", "?")
-                .replace("_","=");
-    }
-
-
-    public void checklogin2(final String temp_username)
-    {
-        DatabaseReference root= FirebaseDatabase.getInstance().getReference();
-        root.child("GoogleUsers").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()==true)
-                {
-                    if(dataSnapshot.child(temp_username).exists()==true)
+                    if(dataSnapshot.child(temp_id).exists()==true)
                     {
                         flag=1;
                     }

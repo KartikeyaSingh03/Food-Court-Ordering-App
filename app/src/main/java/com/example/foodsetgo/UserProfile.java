@@ -1,8 +1,10 @@
 package com.example.foodsetgo;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +37,8 @@ public class UserProfile extends AppCompatActivity {
     TextView contactTV;
     TextView addressTV;
     String name,pass,contact,address,email;
-    Boolean flag=false;
+    Boolean flag=true;
+    FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,24 +49,23 @@ public class UserProfile extends AppCompatActivity {
         emailTV = findViewById(R.id.email);
         contactTV=findViewById(R.id.contact);
         addressTV=findViewById(R.id.address);
+        firebaseAuth = FirebaseAuth.getInstance();
         change_pwd=findViewById(R.id.ChangePwd);
         Edit =findViewById(R.id.EditProfile);
-        if(bundle!=null) {
-            if (!bundle.getString("email").isEmpty()){
-                email = bundle.getString("email");
-                flag = true;
-            }
-        }
+        final String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(UserProfile.this);
+        if(acct==null)
+            flag = false;
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
         root.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(flag){
-                    name = dataSnapshot.child("Users").child(email).child("name").getValue().toString();
-                    address= decodeFirebase(dataSnapshot.child("Users").child(email).child("address").getValue().toString());
-                    contact=dataSnapshot.child("Users").child(email).child("contact").getValue().toString();
+                    name = dataSnapshot.child("Users").child(currentuser).child("name").getValue().toString();
+                    address=dataSnapshot.child("Users").child(currentuser).child("address").getValue().toString();
+                    contact=dataSnapshot.child("Users").child(currentuser).child("contact").getValue().toString();
                     nameTV.setText(name);
-                    emailTV.setText(decodeFirebase(email));
+                    emailTV.setText(email);
                     contactTV.setText(contact);
                     addressTV.setText(address);
                 }
@@ -83,7 +86,6 @@ public class UserProfile extends AppCompatActivity {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(UserProfile.this);
         if (acct != null) {
             String personName = acct.getDisplayName();
             String personEmail = acct.getEmail();
@@ -123,37 +125,35 @@ public class UserProfile extends AppCompatActivity {
     }
 
     private void signOut() {
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(UserProfile.this,"Successfully signed out",Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(UserProfile.this, CustomerMain.class));
-                        finish();
-                    }
-                });
+        if(flag){
+            AlertDialog.Builder alert = new AlertDialog.Builder(UserProfile.this);
+            alert.setMessage("Are you sure you want to logout?").setCancelable(false).setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    FirebaseAuth.getInstance().signOut();
+                    finish();
+                    Intent in = new Intent(UserProfile.this,CustomerMain.class);
+                    startActivity(in);
+                    Toast.makeText(UserProfile.this,"Logged out Successfully",Toast.LENGTH_LONG).show();
+                }
+            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.cancel();
+                }
+            }).show();
+        }
+        else {
+            mGoogleSignInClient.signOut()
+                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(UserProfile.this, "Successfully signed out", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(UserProfile.this, CustomerMain.class));
+                            finish();
+                        }
+                    });
+        }
     }
 
-    public static String decodeFirebase(String s) {
-        String res="";
-        for(int ni=0;ni<s.length();ni++) {
-            char nc = s.charAt(ni);
-            if (nc == '+') {
-                res += '-';
-            }
-            else if (nc == '>') {
-                res += '.';
-            }
-            else if (nc == '?') {
-                res += '/';
-            }
-            else if(nc == '='){
-                res+='_';
-            }
-            else {
-                res+=s.charAt(ni);
-            }
-        }
-        return res;
-    }
 }

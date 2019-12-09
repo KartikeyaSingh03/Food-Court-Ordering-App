@@ -36,7 +36,7 @@ public class ChangePassword extends AppCompatActivity {
         change= findViewById(R.id.ChangeBtn);
         Bundle bundle = getIntent().getExtras();
         if(bundle!=null) {
-            username = encodeFirebase(bundle.getString("username"));
+            username = bundle.getString("username");
         }
         database = FirebaseDatabase.getInstance();
         final DatabaseReference root = database.getReference();
@@ -59,7 +59,7 @@ public class ChangePassword extends AppCompatActivity {
                                     final ProgressDialog progress = new ProgressDialog(ChangePassword.this);
                                     progress.setMessage("Changing Password ");
                                     progress.show();
-                                    User u= new User(name,sha256(newPassword),contact,address);
+                                    User u= new User(name,contact,address);
                                     root.child("Users").child(username).setValue(u);
                                     progress.dismiss();
                                     Toast.makeText(ChangePassword.this,"Password Changed Successfully",Toast.LENGTH_LONG).show();
@@ -91,13 +91,6 @@ public class ChangePassword extends AppCompatActivity {
 
     }
 
-    public static String encodeFirebase(String s) {
-        return s
-                .replace("-", "+")
-                .replace(".", ">")
-                .replace("/", "?")
-                .replace("_","=");
-    }
 
     public static String sha256(String base) {
         try{

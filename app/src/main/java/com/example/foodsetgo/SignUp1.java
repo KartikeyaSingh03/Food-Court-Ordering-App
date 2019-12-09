@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +31,7 @@ public class SignUp1 extends AppCompatActivity {
     Button register;
     String temp_password,temp_username;
     FirebaseDatabase database;
+    FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,15 +43,13 @@ public class SignUp1 extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         database = FirebaseDatabase.getInstance();
         temp_username=bundle.getString("username");
-        final  String username=encodeFirebase(temp_username).trim();
+        final  String username=temp_username.trim();
         temp_password=bundle.getString("password");
-        final String pass=sha256(temp_password).trim();
-
+        final String pass=temp_password.trim();
+        firebaseAuth = FirebaseAuth.getInstance();
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 Register(username,pass);
             }
         });
@@ -56,9 +57,9 @@ public class SignUp1 extends AppCompatActivity {
 
     public void Register(final String username, String password)
     {
-        String temp_name=name.getText().toString().trim();
-        String temp_address=address.getText().toString().trim();
-        String temp_contact=contact.getText().toString().trim();
+        final String temp_name=name.getText().toString().trim();
+        final String temp_address=address.getText().toString().trim();
+        final String temp_contact=contact.getText().toString().trim();
         try {
             if (temp_name.isEmpty() == true || isValidName(temp_name) == false)
                 Toast.makeText(this, "Please Enter Your Name!", Toast.LENGTH_LONG).show();
@@ -67,75 +68,33 @@ public class SignUp1 extends AppCompatActivity {
             else if (temp_contact.isEmpty() == true || isValidContact(temp_contact) == false)
                 Toast.makeText(this, "Please Enter a Valid Contact Number!", Toast.LENGTH_LONG).show();
             else {
-
-                temp_address = encodeFirebase(temp_address);
-                //database.setPersistenceEnabled(true);
                 final ProgressDialog progress = new ProgressDialog(SignUp1.this);
                 progress.setMessage("Registering...");
                 progress.show();
-                final User u = new User(temp_name, password, temp_contact, temp_address);
-                final DatabaseReference root = database.getReference();
-                root.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.child("Users").child(username).exists()){
-                            Toast.makeText(SignUp1.this,"The username is already taken",Toast.LENGTH_LONG).show();
-                            progress.dismiss();
-                            Intent i =new Intent(SignUp1.this,signup.class);
-                            startActivity(i);
-                        }
-                        else{
-                            root.child("Users").child(username).setValue(u)
-                                    .addOnCompleteListener(SignUp1.this, new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful() == true) {
-                                                Toast.makeText(SignUp1.this, "Registration Successful", Toast.LENGTH_LONG).show();
-                                                progress.dismiss();
-                                            } else {
-                                                Toast.makeText(SignUp1.this, "Registration UnSuccessful", Toast.LENGTH_LONG).show();
-                                                progress.dismiss();
-
-                                            }
-                                        }
-                                    });
-                            name.setText("");
-                            address.setText("");
-                            contact.setText("");
-                            Intent i = new Intent(SignUp1.this, UserProfile.class);
-                            i.putExtra("email",username);
-                            startActivity(i);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
+                firebaseAuth.createUserWithEmailAndPassword(username, password)
+                        .addOnCompleteListener(SignUp1.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                //checking if success
+                                if(task.isSuccessful()){
+                                    String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                    DatabaseReference root = database.getReference();
+                                    final User u = new User(temp_name, temp_contact, temp_address);
+                                    root.child("Users").child(currentuser).setValue(u);
+                                    finish();
+                                    startActivity(new Intent(getApplicationContext(), UserProfile.class));
+                                }else{
+                                    //display some message here
+                                    Toast.makeText(SignUp1.this,"Email ID is already registered",Toast.LENGTH_LONG).show();
+                                }
+                                progress.dismiss();
+                            }
+                        });
 
             }
         }
         catch (Exception e){
             Toast.makeText(SignUp1.this,e.getMessage(),Toast.LENGTH_LONG).show();
-        }
-    }
-    public static String sha256(String base) {
-        try{
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(base.getBytes("UTF-8"));
-            StringBuffer hexString = new StringBuffer();
-
-            for (int i = 0; i < hash.length; i++) {
-                String hex = Integer.toHexString(0xff & hash[i]);
-                if(hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-
-            return hexString.toString();
-        } catch(Exception ex){
-            throw new RuntimeException(ex);
         }
     }
 
@@ -168,34 +127,5 @@ public class SignUp1 extends AppCompatActivity {
         return true;
     }
 
-    public static String encodeFirebase(String s) {
-        return s
-                .replace("-", "+")
-                .replace(".", ">")
-                .replace("/", "?")
-                .replace("_","=");
-    }
 
-    public static String decodeFirebase(String s) {
-        String res="";
-        for(int ni=0;ni<s.length();ni++) {
-            char nc = s.charAt(ni);
-            if (nc == '+') {
-                res += '-';
-            }
-            else if (nc == '>') {
-                res += '.';
-            }
-            else if (nc == '?') {
-                res += '/';
-            }
-            else if(nc == '='){
-                res+='_';
-            }
-            else {
-                res+=s.charAt(ni);
-            }
-        }
-        return res;
-    }
 }

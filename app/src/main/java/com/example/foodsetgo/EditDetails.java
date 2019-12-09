@@ -37,7 +37,7 @@ public class EditDetails extends AppCompatActivity {
         Bundle bundle =getIntent().getExtras();
         final DatabaseReference root = FirebaseDatabase.getInstance().getReference();
         if(bundle!=null){
-            username= encodeFirebase(bundle.getString("Email"));
+            username= bundle.getString("Email");
         }
         Modify.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +64,7 @@ public class EditDetails extends AppCompatActivity {
                         root.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.child("Users").child(encodeFirebase(newEmail)).exists()){
+                                if(dataSnapshot.child("Users").child(newEmail).exists()){
                                     Toast.makeText(EditDetails.this,"The username already exists",Toast.LENGTH_LONG).show();
                                     progress.dismiss();
                                     Intent i = new Intent(EditDetails.this,UserProfile.class);
@@ -72,13 +72,13 @@ public class EditDetails extends AppCompatActivity {
                                 }
                                 else {
                                     String newPass = dataSnapshot.child("Users").child(username).child("password").getValue().toString();
-                                    User newUser = new User(newName, newPass, newContact, encodeFirebase(newAdd));
+                                    User newUser = new User(newName, newContact, newAdd);
                                     root.child("Users").child(username).removeValue();
-                                    root.child("Users").child(encodeFirebase(newEmail)).setValue(newUser);
+                                    root.child("Users").child(newEmail).setValue(newUser);
                                     Toast.makeText(EditDetails.this, "Details Edited Successfully!", Toast.LENGTH_LONG).show();
                                     progress.dismiss();
                                     Intent i = new Intent(EditDetails.this, UserProfile.class);
-                                    i.putExtra("email", encodeFirebase(newEmail));
+                                    i.putExtra("email", newEmail);
                                     startActivity(i);
                                 }
                             }
@@ -95,14 +95,6 @@ public class EditDetails extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    public static String encodeFirebase(String s) {
-        return s
-                .replace("-", "+")
-                .replace(".", ">")
-                .replace("/", "?")
-                .replace("_","=");
     }
 
     public boolean isValidContact(String s){

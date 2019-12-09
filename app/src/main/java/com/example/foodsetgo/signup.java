@@ -73,40 +73,13 @@ public class signup extends AppCompatActivity {
            Toast.makeText(this, "Password must be at least 8 characters long, must contain a letter[a-z,A-Z], and a number[0-9]", Toast.LENGTH_LONG).show();
         else
         {
-            final String tusername=encodeFirebase(temp_username).trim();
-            final String tpass=sha256(temp_password).trim();
-            checklogin(tusername,tpass);
-            if(flag==0)
+            final String tusername=temp_username.trim();
             moveToNext();
-            else
-            {
-                Intent i = new Intent(signup.this, UserProfile.class);
-                startActivity(i);
-
-            }
-        }
-    }
-
-    public static String sha256(String base) {
-        try{
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(base.getBytes("UTF-8"));
-            StringBuffer hexString = new StringBuffer();
-
-            for (int i = 0; i < hash.length; i++) {
-                String hex = Integer.toHexString(0xff & hash[i]);
-                if(hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-
-            return hexString.toString();
-        } catch(Exception ex){
-            throw new RuntimeException(ex);
         }
     }
 
     public void moveToNext(){
-        String temp_username="",temp_password="";
+        String temp_username,temp_password;
         Intent i= new Intent(signup.this,SignUp1.class);
         temp_username = username.getText().toString().trim();
         i.putExtra("username", temp_username);
@@ -149,37 +122,6 @@ public class signup extends AppCompatActivity {
     }
 
 
-
-    public static String encodeFirebase(String s) {
-        return s
-                .replace("-", "+")
-                .replace(".", ">")
-                .replace("/", "?")
-                .replace("_","=");
-    }
-
-    public static String decodeFirebase(String s) {
-        String res="";
-        for(int ni=0;ni<s.length();ni++) {
-            char nc = s.charAt(ni);
-            if (nc == '+') {
-                res += '-';
-            }
-            else if (nc == '>') {
-                res += '.';
-            }
-            else if (nc == '?') {
-                res += '/';
-            }
-            else if(nc == '='){
-                res+='_';
-            }
-            else {
-                res+=s.charAt(ni);
-            }
-        }
-        return res;
-    }
 
 
 
