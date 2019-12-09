@@ -62,5 +62,6 @@ public class RegistrationRestaurant extends AppCompatActivity {
         temp_password = password.getText().toString().trim();
         i.putExtra("password", temp_password);
         startActivity(i);
+        finish();
     }
 }

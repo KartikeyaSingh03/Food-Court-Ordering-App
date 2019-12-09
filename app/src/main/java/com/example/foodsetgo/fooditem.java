@@ -9,6 +9,7 @@ public class fooditem {
 
     public fooditem()
     {}
+
     public fooditem(String name, String price, String status, String imgUrl) {
         Name = name;
         Price = price;
@@ -31,7 +32,6 @@ public class fooditem {
     public String getImgUrl() {
         return ImgUrl;
     }
-
 }
 
 

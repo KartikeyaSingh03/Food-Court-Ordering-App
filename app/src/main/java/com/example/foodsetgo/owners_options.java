@@ -61,7 +61,6 @@ public class owners_options extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
     }
 
 }

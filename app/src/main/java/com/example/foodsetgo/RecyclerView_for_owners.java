@@ -62,7 +62,6 @@ public class RecyclerView_for_owners extends AppCompatActivity {
             }
         });
 
-
     }
 
 }

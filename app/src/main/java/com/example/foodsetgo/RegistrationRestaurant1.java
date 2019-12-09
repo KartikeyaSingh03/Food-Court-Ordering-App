@@ -96,6 +96,7 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
                                 i.putExtra("username",username);
                                 i.putExtra("name",temp_name);
                                 startActivity(i);
+                                finish();
                             }
                             else
                             {
@@ -152,6 +153,7 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
                     Toast.makeText(RegistrationRestaurant1.this,"Already Registered Please Try Login",Toast.LENGTH_LONG).show();
                     Intent i=new Intent(RegistrationRestaurant1.this,RegistrationRestaurant.class);
                     startActivity(i);
+                    finish();
                 }
             }
 
