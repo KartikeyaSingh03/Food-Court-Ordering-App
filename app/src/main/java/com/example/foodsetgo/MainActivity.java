@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.io.File;
@@ -19,13 +21,20 @@ import java.io.File;
 public class MainActivity extends AppCompatActivity {
     Button customerBtn;
     Button ownerBtn;
-
+    private FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         customerBtn=(Button)findViewById(R.id.Customer);
         ownerBtn=(Button)findViewById(R.id.Owner);
+        firebaseAuth = FirebaseAuth.getInstance();
+        if(firebaseAuth.getCurrentUser() != null){
+            //close this activity
+            finish();
+            //opening profile activity
+            startActivity(new Intent(getApplicationContext(), UserProfile.class));
+        }
         customerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

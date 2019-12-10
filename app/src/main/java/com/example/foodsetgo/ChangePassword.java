@@ -6,11 +6,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +32,7 @@ public class ChangePassword extends AppCompatActivity {
     private EditText newPass;
     private EditText oldPass;
     FirebaseDatabase database;
+    FirebaseUser user;
     String username,pwd,name,contact,address;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +44,9 @@ public class ChangePassword extends AppCompatActivity {
         change= findViewById(R.id.ChangeBtn);
         Bundle bundle = getIntent().getExtras();
         if(bundle!=null) {
-            username = encodeFirebase(bundle.getString("username"));
+            username = bundle.getString("username");
         }
+        user =FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance();
         final DatabaseReference root = database.getReference();
         change.setOnClickListener(new View.OnClickListener() {
@@ -46,75 +55,43 @@ public class ChangePassword extends AppCompatActivity {
                 final String oldPassword=oldPass.getText().toString().trim();
                 final String newPassword=newPass.getText().toString().trim();
                 final String confPassword=confPwd.getText().toString().trim();
-                root.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        pwd = dataSnapshot.child("Users").child(username).child("password").getValue().toString();
-                        contact = dataSnapshot.child("Users").child(username).child("contact").getValue().toString();
-                        name = dataSnapshot.child("Users").child(username).child("name").getValue().toString();
-                        address = dataSnapshot.child("Users").child(username).child("address").getValue().toString();
-                        if(sha256(oldPassword).equals(pwd)){
-                            if(newPassword.equals(confPassword)){
-                                if(passStrength(newPassword)){
-                                    final ProgressDialog progress = new ProgressDialog(ChangePassword.this);
-                                    progress.setMessage("Changing Password ");
-                                    progress.show();
-                                    User u= new User(name,sha256(newPassword),contact,address);
-                                    root.child("Users").child(username).setValue(u);
-                                    progress.dismiss();
-                                    Toast.makeText(ChangePassword.this,"Password Changed Successfully",Toast.LENGTH_LONG).show();
-                                    Intent i= new Intent(ChangePassword.this,UserProfile.class);
-                                    i.putExtra("email",username);
-                                    startActivity(i);
-                                }
-                                else{
-                                    Toast.makeText(ChangePassword.this, "Password must be at least 8 characters long, must contain a letter[a-z,A-Z], and a number[0-9]", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                            else{
-                                Toast.makeText(ChangePassword.this,"The Passwords do not match",Toast.LENGTH_LONG).show();
-                            }
+                AuthCredential credential = EmailAuthProvider.getCredential(username,oldPassword);
+                    if(newPassword.equals(confPassword)) {
+                        if(passStrength(newPassword)) {
+                            user.reauthenticate(credential)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(ChangePassword.this, "Password Changed Successfully", Toast.LENGTH_LONG).show();
+                                                        Intent i = new Intent(ChangePassword.this,UserProfile.class);
+                                                        startActivity(i);
+                                                    } else {
+                                                        Toast.makeText(ChangePassword.this, "Unable to change password", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            Toast.makeText(ChangePassword.this, "Old password is incorrect", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
                         }
                         else{
-                            Toast.makeText(ChangePassword.this, "Old password is incorrect", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ChangePassword.this, "Password must be at least 8 characters long, must contain a letter[a-z,A-Z], and a number[0-9]", Toast.LENGTH_LONG).show();
                         }
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    else{
+                        Toast.makeText(ChangePassword.this,"The Passwords do not match",Toast.LENGTH_LONG).show();
                     }
-                });
 
-            }
+                }
         });
 
-    }
-
-    public static String encodeFirebase(String s) {
-        return s
-                .replace("-", "+")
-                .replace(".", ">")
-                .replace("/", "?")
-                .replace("_","=");
-    }
-
-    public static String sha256(String base) {
-        try{
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(base.getBytes("UTF-8"));
-            StringBuffer hexString = new StringBuffer();
-
-            for (int i = 0; i < hash.length; i++) {
-                String hex = Integer.toHexString(0xff & hash[i]);
-                if(hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-
-            return hexString.toString();
-        } catch(Exception ex){
-            throw new RuntimeException(ex);
-        }
     }
 
     public static Boolean passStrength(String password){
