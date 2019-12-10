@@ -2,8 +2,11 @@ package com.example.foodsetgo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,8 +42,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    Intent i = new Intent(MainActivity.this, OwnerMain.class);
-                    startActivity(i);
+                    String temp=SharedPreferenceForOwner.getUserName(MainActivity.this);
+                    if(temp.length()!=0)
+                    {
+                       Intent i=new Intent(MainActivity.this,owners_options.class);
+                       i.putExtra("username",temp);
+                       startActivity(i);
+                       finish();
+                    }
+                    else {
+                        Intent i = new Intent(MainActivity.this, OwnerMain.class);
+                        startActivity(i);
+                    }
                 }
                 catch(Exception e){
                     Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -48,5 +61,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 }

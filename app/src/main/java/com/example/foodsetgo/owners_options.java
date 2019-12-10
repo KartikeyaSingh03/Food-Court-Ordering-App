@@ -48,7 +48,10 @@ public class owners_options extends AppCompatActivity {
         signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                SharedPreferenceForOwner.clearUserName(owners_options.this);
+                Intent i=new Intent(owners_options.this,OwnerMain.class);
+                startActivity(i);
+                finish();
             }
         });
 

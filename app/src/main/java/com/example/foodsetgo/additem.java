@@ -95,7 +95,7 @@ public class additem extends AppCompatActivity {
                    root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Price").setValue(temp.getPrice());
                    root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Status").setValue(temp.getStatus());
 
-                uploadImage(temp.getName());
+                uploadImage(temp.getName(),username);
 
             }
 
@@ -133,14 +133,14 @@ public class additem extends AppCompatActivity {
     }
     FirebaseStorage storage=FirebaseStorage.getInstance();
     StorageReference storageRef=storage.getReference();
-    private void uploadImage(String Name) {
+    private void uploadImage(String Name,String RestName) {
 
         if(filePath != null)
         {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-            StorageReference ref = storageRef.child("images/"+Name);
+            StorageReference ref = storageRef.child("images/"+Name+'/'+RestName);
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override

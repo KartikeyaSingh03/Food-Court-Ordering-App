@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.security.MessageDigest;
 
 public class OwnerMain extends AppCompatActivity {
+
     EditText emailaddress;
     EditText password;
     Button   login;
@@ -45,6 +46,7 @@ public class OwnerMain extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i=new Intent(OwnerMain.this,RegistrationRestaurant.class);
                 startActivity(i);
+                finish();
             }
         });
     }
@@ -62,8 +64,10 @@ public class OwnerMain extends AppCompatActivity {
                         if(dataSnapshot.child(temp_username).child("password").getValue().toString().equals(temp_password))
                         {
                             Intent i=new Intent(OwnerMain.this,owners_options.class);
+                            SharedPreferenceForOwner.setUserName(OwnerMain.this,temp_username);
                             i.putExtra("username",temp_username);
                             startActivity(i);
+                            finish();
                         }
                         else
                         {

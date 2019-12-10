@@ -95,6 +95,7 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
                                 Intent i=new Intent(RegistrationRestaurant1.this,owners_options.class);
                                 i.putExtra("username",username);
                                 i.putExtra("name",temp_name);
+                                SharedPreferenceForOwner.setUserName(RegistrationRestaurant1.this,username);
                                 startActivity(i);
                                 finish();
                             }
@@ -147,6 +148,7 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
                 if(dataSnapshot.child(username).exists()==false)
                 {
                     Register(username,password);
+
                 }
                 else
                 {
