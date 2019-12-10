@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 public class EditDetails extends AppCompatActivity {
     EditText NameTF,ContTF,AddTF;
     Button Modify;
-    String username;
+    String username,Uid;
     FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,10 @@ public class EditDetails extends AppCompatActivity {
                 final String newName = NameTF.getText().toString().trim();
                 final String newContact = ContTF.getText().toString().trim();
                 final String newAdd = AddTF.getText().toString().trim();
-                final String Uid = firebaseAuth.getCurrentUser().getUid();
+                if(firebaseAuth.getCurrentUser()!=null)
+                    Uid = firebaseAuth.getCurrentUser().getUid();
+                else
+                    Uid= GoogleSignIn.getLastSignedInAccount(EditDetails.this).getId();
                 if (newName.isEmpty() == true || isValidName(newName) == false)
                     Toast.makeText(EditDetails.this, "Please Enter Your Name!", Toast.LENGTH_LONG).show();
                 else if (newAdd.isEmpty() == true || isValidAdd(newAdd) == false)
@@ -59,12 +63,12 @@ public class EditDetails extends AppCompatActivity {
                         final ProgressDialog progress = new ProgressDialog(EditDetails.this);
                         progress.setMessage("Editing Details...");
                         progress.show();
-                        root.addValueEventListener(new ValueEventListener() {
+                        root.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if(dataSnapshot.child("Users").child(Uid).exists()){
                                     User newUser = new User(newName, newContact, newAdd);
-                                    root.child("Users").child(username).removeValue();
+                                    root.child("Users").child(Uid).removeValue();
                                     root.child("Users").child(Uid).setValue(newUser);
                                     Toast.makeText(EditDetails.this, "Details Edited Successfully!", Toast.LENGTH_LONG).show();
                                     progress.dismiss();

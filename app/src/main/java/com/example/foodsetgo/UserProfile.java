@@ -36,7 +36,7 @@ public class UserProfile extends AppCompatActivity {
     TextView emailTV;
     TextView contactTV;
     TextView addressTV;
-    String name,pass,contact,address,email;
+    String Name="",pass,contact="",address="",email,currentuser;
     Boolean flag=true;
     FirebaseAuth firebaseAuth;
     @Override
@@ -52,23 +52,36 @@ public class UserProfile extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         change_pwd=findViewById(R.id.ChangePwd);
         Edit =findViewById(R.id.EditProfile);
-        final String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(UserProfile.this);
-        if(acct==null)
+        GoogleSignInAccount acct =  GoogleSignIn.getLastSignedInAccount(UserProfile.this);
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
+            currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            email= FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        }
+        else {
+            currentuser = acct.getId();
+            email= acct.getEmail();
             flag = false;
+        }
+
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
         root.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(flag){
-                    name = dataSnapshot.child("Users").child(currentuser).child("name").getValue().toString();
+                if(dataSnapshot.child("Users").child(currentuser).child("name").exists())
+                    Name = dataSnapshot.child("Users").child(currentuser).child("name").getValue().toString();
+                if(dataSnapshot.child("Users").child(currentuser).child("address").exists())
                     address=dataSnapshot.child("Users").child(currentuser).child("address").getValue().toString();
+                if(dataSnapshot.child("Users").child(currentuser).child("contact").exists())
                     contact=dataSnapshot.child("Users").child(currentuser).child("contact").getValue().toString();
-                    nameTV.setText(name);
-                    emailTV.setText(email);
-                    contactTV.setText(contact);
-                    addressTV.setText(address);
-                }
+                    if(!Name.isEmpty())
+                        nameTV.setText(Name);
+                    if(!email.isEmpty())
+                        emailTV.setText(email);
+                    if(!contact.isEmpty())
+                        contactTV.setText(contact);
+                    if(!address.isEmpty())
+                        addressTV.setText(address);
+
             }
 
             @Override
