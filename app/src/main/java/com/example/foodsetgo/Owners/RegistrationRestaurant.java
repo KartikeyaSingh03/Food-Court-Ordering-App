@@ -1,6 +1,4 @@
-package com.example.foodsetgo;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.foodsetgo.Owners;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,6 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.foodsetgo.R;
 
 public class RegistrationRestaurant extends AppCompatActivity {
 

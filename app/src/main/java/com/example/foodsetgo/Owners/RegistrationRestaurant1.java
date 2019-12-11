@@ -1,8 +1,4 @@
-package com.example.foodsetgo;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.foodsetgo.Owners;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -12,6 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.foodsetgo.R;
+import com.example.foodsetgo.SharedPreferenceForOwner;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -21,11 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 public class RegistrationRestaurant1 extends AppCompatActivity {
     EditText name;
@@ -78,7 +74,7 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
             progress.setMessage("Registering...");
             progress.show();
 
-            RestInfo R=new RestInfo(temp_name,password,temp_contact,temp_address);
+            final RestInfo R=new RestInfo(temp_name,password,temp_contact,temp_address);
             DatabaseReference root=FirebaseDatabase.getInstance().getReference();
 
 
@@ -96,6 +92,8 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
                                 i.putExtra("username",username);
                                 i.putExtra("name",temp_name);
                                 SharedPreferenceForOwner.setUserName(RegistrationRestaurant1.this,username);
+
+                                Toast.makeText(RegistrationRestaurant1.this,"Welcome "+temp_name,Toast.LENGTH_LONG).show();
                                 startActivity(i);
                                 finish();
                             }
@@ -103,7 +101,6 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
                             {
                                 Toast.makeText(RegistrationRestaurant1.this,"Registration UnSuccessful",Toast.LENGTH_LONG).show();
                                 progress.dismiss();
-
                             }
                         }
                     });

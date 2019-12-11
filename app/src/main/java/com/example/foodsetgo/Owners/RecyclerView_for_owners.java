@@ -1,14 +1,15 @@
-package com.example.foodsetgo;
+package com.example.foodsetgo.Owners;
+
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
-
+import com.example.foodsetgo.R;
+import com.example.foodsetgo.foodadapter;
+import com.example.foodsetgo.fooditem;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,7 +51,7 @@ public class RecyclerView_for_owners extends AppCompatActivity {
                         fooditem f=dataSnapshot1.getValue(fooditem.class);
                         listmenus.add(f);
                     }
-                    adap =new foodadapter(listmenus,RecyclerView_for_owners.this);
+                    adap =new foodadapter(listmenus, RecyclerView_for_owners.this);
                     rv.setAdapter(adap);
 
                 }

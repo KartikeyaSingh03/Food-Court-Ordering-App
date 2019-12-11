@@ -1,7 +1,4 @@
-package com.example.foodsetgo;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.foodsetgo.Owners;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +7,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.foodsetgo.R;
+import com.example.foodsetgo.SharedPreferenceForOwner;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,6 +68,7 @@ public class OwnerMain extends AppCompatActivity {
                             Intent i=new Intent(OwnerMain.this,owners_options.class);
                             SharedPreferenceForOwner.setUserName(OwnerMain.this,temp_username);
                             i.putExtra("username",temp_username);
+                            Toast.makeText(OwnerMain.this,"Welcome "+dataSnapshot.child(temp_username).child("name").getValue().toString(),Toast.LENGTH_LONG).show();
                             startActivity(i);
                             finish();
                         }

@@ -1,5 +1,6 @@
 package com.example.foodsetgo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -13,9 +14,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.foodsetgo.Owners.OwnerMain;
+import com.example.foodsetgo.Owners.owners_options;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,12 +59,30 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     String temp=SharedPreferenceForOwner.getUserName(MainActivity.this);
-                    if(temp.length()!=0)
+                    if(temp.isEmpty()==false)
                     {
-                       Intent i=new Intent(MainActivity.this,owners_options.class);
+                       final Intent i=new Intent(MainActivity.this, owners_options.class);
                        i.putExtra("username",temp);
-                       startActivity(i);
-                       finish();
+
+
+                       DatabaseReference root=FirebaseDatabase.getInstance().getReference().child("Restaurants").child(temp);
+                        root.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if(dataSnapshot!=null)
+                                {
+                                    Toast.makeText(MainActivity.this,"Welcome "+dataSnapshot.child("name").getValue(),Toast.LENGTH_LONG).show();
+                                    startActivity(i);
+                                    finish();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
                     }
                     else {
                         Intent i = new Intent(MainActivity.this, OwnerMain.class);

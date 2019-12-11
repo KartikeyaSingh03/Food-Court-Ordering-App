@@ -1,7 +1,4 @@
-package com.example.foodsetgo;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.example.foodsetgo.Owners;
 
 public class RestInfo {
     private String name;

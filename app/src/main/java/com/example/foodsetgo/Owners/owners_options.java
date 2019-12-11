@@ -1,13 +1,16 @@
-package com.example.foodsetgo;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
+package com.example.foodsetgo.Owners;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.foodsetgo.R;
+import com.example.foodsetgo.SharedPreferenceForOwner;
 
 public class owners_options extends AppCompatActivity {
 
@@ -50,6 +53,7 @@ public class owners_options extends AppCompatActivity {
             public void onClick(View view) {
                 SharedPreferenceForOwner.clearUserName(owners_options.this);
                 Intent i=new Intent(owners_options.this,OwnerMain.class);
+                Toast.makeText(owners_options.this,"Succesfully Looged Out",Toast.LENGTH_LONG).show();
                 startActivity(i);
                 finish();
             }

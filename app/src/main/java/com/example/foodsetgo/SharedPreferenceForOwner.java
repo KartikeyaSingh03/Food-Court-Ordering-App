@@ -6,7 +6,6 @@ import android.preference.PreferenceManager;
 
 public class SharedPreferenceForOwner {
     static final String PREF_USER_NAME= "";
-
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
     }
@@ -17,6 +16,7 @@ public class SharedPreferenceForOwner {
         editor.putString(PREF_USER_NAME, userName);
         editor.commit();
     }
+
 
     public static String getUserName(Context ctx)
     {
