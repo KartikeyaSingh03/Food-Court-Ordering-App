@@ -83,12 +83,14 @@ public class additem extends AppCompatActivity {
                 final String itemprice=price.getText().toString().trim();
                 final String username=bundle.getString("username").trim();
 
-                final fooditem temp = new fooditem(itemname,itemprice, text,"");
+                final fooditem temp = new fooditem(itemname,itemprice, text,"",username);
 
                 DatabaseReference root=FirebaseDatabase.getInstance().getReference();
                    root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Name").setValue(temp.getName() );
                    root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Price").setValue(temp.getPrice());
                    root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Status").setValue(temp.getStatus());
+                root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Username").setValue(temp.getUsername());
+
 
                 uploadImage(temp.getName(),username);
 
@@ -135,7 +137,7 @@ public class additem extends AppCompatActivity {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-            StorageReference ref = storageRef.child("images/"+Name+'/'+RestName);
+            StorageReference ref = storageRef.child("images").child(RestName).child(Name);
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override

@@ -5,12 +5,16 @@ public class RestInfo {
     private String password;
     private String contact;
     private String address;
+    private String username;
 
-    public RestInfo(String name, String password, String contact, String address) {
+    public RestInfo(){}
+
+    public RestInfo(String name, String password, String contact, String address, String username) {
         this.name = name;
         this.password = password;
         this.contact = contact;
         this.address = address;
+        this.username = username;
     }
 
     public String getName() {
@@ -27,5 +31,9 @@ public class RestInfo {
 
     public String getAddress() {
         return address;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

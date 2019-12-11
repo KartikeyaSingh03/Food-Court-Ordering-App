@@ -46,7 +46,7 @@ public class foodadapter extends RecyclerView.Adapter<foodadapter.ViewHolder> {
         holder.foodname.setText(listmenu.getName());
         FirebaseStorage storage=FirebaseStorage.getInstance();
         StorageReference storageRef=storage.getReferenceFromUrl("gs://foodsetgo-120b6.appspot.com");
-        storageRef.child("images/"+listmenu.getName()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageRef.child("images/"+listmenu.getUsername()+'/'+listmenu.getName()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 // Got the download URL for 'users/me/profile.png'
@@ -59,7 +59,7 @@ public class foodadapter extends RecyclerView.Adapter<foodadapter.ViewHolder> {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
-                holder.foodname.setText("hello2");
+                holder.foodname.setText( "fail");
 
             }
         });

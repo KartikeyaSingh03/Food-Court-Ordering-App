@@ -74,7 +74,7 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
             progress.setMessage("Registering...");
             progress.show();
 
-            final RestInfo R=new RestInfo(temp_name,password,temp_contact,temp_address);
+            final RestInfo R=new RestInfo(temp_name,password,temp_contact,temp_address,username);
             DatabaseReference root=FirebaseDatabase.getInstance().getReference();
 
 
