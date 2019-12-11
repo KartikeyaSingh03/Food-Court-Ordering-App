@@ -14,8 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.foodsetgo.Owners.OwnerMain;
-import com.example.foodsetgo.Owners.owners_options;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
+import java.security.acl.Owner;
 
 public class MainActivity extends AppCompatActivity {
     Button customerBtn;
@@ -41,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
             finish();
             //opening profile activity
             startActivity(new Intent(getApplicationContext(), UserProfile.class));
+        }
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if(account != null) {
+            startActivity(new Intent(MainActivity.this, UserProfile.class));
         }
         customerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,11 +66,11 @@ public class MainActivity extends AppCompatActivity {
                     String temp=SharedPreferenceForOwner.getUserName(MainActivity.this);
                     if(temp.isEmpty()==false)
                     {
-                       final Intent i=new Intent(MainActivity.this, owners_options.class);
-                       i.putExtra("username",temp);
+                        final Intent i=new Intent(MainActivity.this, com.example.foodsetgo.Owners.owners_options.class);
+                        i.putExtra("username",temp);
 
 
-                       DatabaseReference root=FirebaseDatabase.getInstance().getReference().child("Restaurants").child(temp);
+                        DatabaseReference root=FirebaseDatabase.getInstance().getReference().child("Restaurants").child(temp);
                         root.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -85,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                     else {
-                        Intent i = new Intent(MainActivity.this, OwnerMain.class);
+                        Intent i = new Intent(MainActivity.this, com.example.foodsetgo.Owners.OwnerMain.class);
                         startActivity(i);
                     }
                 }
@@ -94,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
 

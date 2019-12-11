@@ -37,8 +37,8 @@ public class login extends AppCompatActivity {
     EditText username;
     EditText password;
     Button   Login;
-    int flag;
     private FirebaseAuth firebaseAuth;
+    boolean flag;
     SignInButton signInButton;
     GoogleSignInClient mGoogleSignInClient;
     @Override
@@ -54,12 +54,6 @@ public class login extends AppCompatActivity {
         firebaseAuth =FirebaseAuth.getInstance();
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        if(firebaseAuth.getCurrentUser() != null){
-            //close this activity
-            finish();
-            //opening profile activity
-            startActivity(new Intent(getApplicationContext(), UserProfile.class));
-        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -123,14 +117,11 @@ public class login extends AppCompatActivity {
             final String personAddress="".trim();
             final String username=personEmail.trim();
             final String personId = account.getId();
-            User u=new User(personName,personContact,personAddress);
-
             DatabaseReference root=FirebaseDatabase.getInstance().getReference();
-            checklogin2(personId);
-            if(flag==0)
-                root.child("GoogleUsers").child(username).setValue(u);
-
-
+            User u=new User(personName,personContact,personAddress);
+            if(!personId.isEmpty())
+                if(!checklogin2(personId))
+                    root.child("Users").child(personId).setValue(u);
             // Signed in successfully, show authenticated UI.
             startActivity(new Intent(login.this, UserProfile.class));
         } catch (ApiException e) {
@@ -197,34 +188,29 @@ public class login extends AppCompatActivity {
     }
 
 
-    public void checklogin2(final String temp_id)
+    public boolean checklogin2(final String temp_id)
     {
+
         DatabaseReference root= FirebaseDatabase.getInstance().getReference();
-        root.child("Users").addValueEventListener(new ValueEventListener() {
+        root.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()==true)
-                {
-                    if(dataSnapshot.child(temp_id).exists()==true)
+                    if(dataSnapshot.child("Users").child(temp_id).exists()==true)
                     {
-                        flag=1;
+                        flag = true;
                     }
                     else
                     {
-                        flag=0;
+                        flag= false;
                     }
-                }
-                else
-                {
-                    flag=0;
-                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    flag =false;
             }
         });
+        return flag;
     }
 
 }
