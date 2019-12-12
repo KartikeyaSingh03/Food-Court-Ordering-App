@@ -123,7 +123,7 @@ public class login extends AppCompatActivity {
                 if(!checklogin2(personId))
                     root.child("Users").child(personId).setValue(u);
             // Signed in successfully, show authenticated UI.
-            startActivity(new Intent(login.this, UserProfile.class));
+            startActivity(new Intent(login.this, UserHome.class));
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -138,7 +138,7 @@ public class login extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if(account != null) {
-            startActivity(new Intent(login.this, UserProfile.class));
+            startActivity(new Intent(login.this, UserHome.class));
         }
         super.onStart();
     }
@@ -169,7 +169,7 @@ public class login extends AppCompatActivity {
                                     }
                                     else {
                                         finish();
-                                        startActivity(new Intent(getApplicationContext(), UserProfile.class));
+                                        startActivity(new Intent(getApplicationContext(), UserHome.class));
                                     }
                                 }
 

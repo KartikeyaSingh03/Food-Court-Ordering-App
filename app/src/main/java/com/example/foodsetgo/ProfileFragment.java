@@ -1,18 +1,18 @@
 package com.example.foodsetgo;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -27,7 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class UserProfile extends AppCompatActivity {
+public class ProfileFragment extends Fragment {
     GoogleSignInClient mGoogleSignInClient;
     Button sign_out;
     Button change_pwd;
@@ -36,22 +36,22 @@ public class UserProfile extends AppCompatActivity {
     TextView emailTV;
     TextView contactTV;
     TextView addressTV;
+    View Viewroot;
     String Name="",pass,contact="",address="",email,currentuser;
     Boolean flag=true;
     FirebaseAuth firebaseAuth;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_profile);
-        sign_out = findViewById(R.id.log_out);
-        nameTV = findViewById(R.id.name);
-        emailTV = findViewById(R.id.email);
-        contactTV=findViewById(R.id.contact);
-        addressTV=findViewById(R.id.address);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState){
+        Viewroot=inflater.inflate(R.layout.fragment_profile, container, false);
+        sign_out = Viewroot.findViewById(R.id.log_out);
+        nameTV = Viewroot.findViewById(R.id.name);
+        emailTV = Viewroot.findViewById(R.id.email);
+        contactTV=Viewroot.findViewById(R.id.contact);
+        addressTV=Viewroot.findViewById(R.id.address);
         firebaseAuth = FirebaseAuth.getInstance();
-        change_pwd=findViewById(R.id.ChangePwd);
-        Edit =findViewById(R.id.EditProfile);
-        GoogleSignInAccount acct =  GoogleSignIn.getLastSignedInAccount(UserProfile.this);
+        change_pwd=Viewroot.findViewById(R.id.ChangePwd);
+        Edit =Viewroot.findViewById(R.id.EditProfile);
+        GoogleSignInAccount acct =  GoogleSignIn.getLastSignedInAccount(getContext());
         if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
             currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
             email= FirebaseAuth.getInstance().getCurrentUser().getEmail();
@@ -72,20 +72,20 @@ public class UserProfile extends AppCompatActivity {
                     address=dataSnapshot.child("Users").child(currentuser).child("address").getValue().toString();
                 if(dataSnapshot.child("Users").child(currentuser).child("contact").exists())
                     contact=dataSnapshot.child("Users").child(currentuser).child("contact").getValue().toString();
-                    if(!Name.isEmpty())
-                        nameTV.setText(Name);
-                    if(!email.isEmpty())
-                        emailTV.setText(email);
-                    if(!contact.isEmpty())
-                        contactTV.setText(contact);
-                    if(!address.isEmpty())
-                        addressTV.setText(address);
+                if(!Name.isEmpty())
+                    nameTV.setText(Name);
+                if(!email.isEmpty())
+                    emailTV.setText(email);
+                if(!contact.isEmpty())
+                    contactTV.setText(contact);
+                if(!address.isEmpty())
+                    addressTV.setText(address);
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(UserProfile.this,"Not Retriving",Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(),"Not Retriving",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -96,7 +96,7 @@ public class UserProfile extends AppCompatActivity {
                 .build();
 
         // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
 
         if (acct != null) {
             String personName = acct.getDisplayName();
@@ -116,12 +116,12 @@ public class UserProfile extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(flag){
-                    Intent i= new Intent(UserProfile.this,ChangePassword.class);
+                    Intent i= new Intent(getContext(),ChangePassword.class);
                     i.putExtra("username",email);
                     startActivity(i);
                 }
                 else{
-                    Toast.makeText(UserProfile.this,"Google Users cannot change password",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),"Google Users cannot change password",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -129,24 +129,25 @@ public class UserProfile extends AppCompatActivity {
         Edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i =new Intent(UserProfile.this,EditDetails.class);
+                Intent i =new Intent(getContext(),EditDetails.class);
                 i.putExtra("Email",email);
                 startActivity(i);
             }
         });
+        return Viewroot;
     }
 
     private void signOut() {
         if(flag){
-            AlertDialog.Builder alert = new AlertDialog.Builder(UserProfile.this);
+            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
             alert.setMessage("Are you sure you want to logout?").setCancelable(false).setPositiveButton("Logout", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     FirebaseAuth.getInstance().signOut();
-                    finish();
-                    Intent in = new Intent(UserProfile.this,CustomerMain.class);
+                    getActivity().finish();
+                    Intent in = new Intent(getContext(),CustomerMain.class);
                     startActivity(in);
-                    Toast.makeText(UserProfile.this,"Logged out Successfully",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),"Logged out Successfully",Toast.LENGTH_LONG).show();
                 }
             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
@@ -157,12 +158,12 @@ public class UserProfile extends AppCompatActivity {
         }
         else {
             mGoogleSignInClient.signOut()
-                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(UserProfile.this, "Successfully signed out", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(UserProfile.this, CustomerMain.class));
-                            finish();
+                            Toast.makeText(getContext(), "Successfully signed out", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getContext(), CustomerMain.class));
+                            getActivity().finish();
                         }
                     });
         }

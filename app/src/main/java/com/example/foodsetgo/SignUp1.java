@@ -82,7 +82,7 @@ public class SignUp1 extends AppCompatActivity {
                                     final User u = new User(temp_name, temp_contact, temp_address);
                                     root.child("Users").child(currentuser).setValue(u);
                                     finish();
-                                    startActivity(new Intent(getApplicationContext(), UserProfile.class));
+                                    startActivity(new Intent(getApplicationContext(), UserHome.class));
                                 }else{
                                     //display some message here
                                     Toast.makeText(SignUp1.this,"Email ID is already registered",Toast.LENGTH_LONG).show();

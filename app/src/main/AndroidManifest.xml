@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RestaurantsList"></activity>
+        <activity android:name=".UserHome"></activity>
+        <activity android:name=".RestaurantsList" />
         <activity
             android:name=".UserSide"
             android:label="@string/title_activity_user_side" />
@@ -30,7 +31,6 @@
         <activity android:name=".Owners.RegistrationRestaurant1" />
         <activity android:name=".Owners.RecyclerView_for_owners" />
         <activity android:name=".MainActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

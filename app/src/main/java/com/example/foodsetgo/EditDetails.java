@@ -72,7 +72,7 @@ public class EditDetails extends AppCompatActivity {
                                     root.child("Users").child(Uid).setValue(newUser);
                                     Toast.makeText(EditDetails.this, "Details Edited Successfully!", Toast.LENGTH_LONG).show();
                                     progress.dismiss();
-                                    Intent i = new Intent(EditDetails.this, UserProfile.class);
+                                    Intent i = new Intent(EditDetails.this, UserHome.class);
                                     startActivity(i);
                                 }
                             }

@@ -41,11 +41,11 @@ public class MainActivity extends AppCompatActivity {
             //close this activity
             finish();
             //opening profile activity
-            startActivity(new Intent(getApplicationContext(), UserProfile.class));
+            startActivity(new Intent(getApplicationContext(), UserHome.class));
         }
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if(account != null) {
-            startActivity(new Intent(MainActivity.this, UserProfile.class));
+            startActivity(new Intent(MainActivity.this, UserHome.class));
         }
         customerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
