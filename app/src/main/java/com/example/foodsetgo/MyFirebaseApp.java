@@ -10,4 +10,6 @@ MyFirebaseApp extends android.app.Application {
         /* Enable disk persistence  */
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
+
+
 }

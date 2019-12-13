@@ -10,14 +10,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.foodsetgo.R;
-import com.example.foodsetgo.SharedPreferenceForOwner;
+import com.example.foodsetgo.SharedPreferencesApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class owners_options extends AppCompatActivity {
 
     Button additem,profile,signout,menulist;
     TextView name;
-
-
+    FirebaseDatabase database=FirebaseDatabase.getInstance();
+    FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,14 +32,14 @@ public class owners_options extends AppCompatActivity {
         signout=findViewById(R.id.signout);
         menulist=findViewById(R.id.menulist);
         name=findViewById(R.id.restaurant_name);
-        name.setText(bundle.getString("name"));
+
+        DatabaseReference root=database.getReference();
+
         additem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Intent i=new Intent(owners_options.this,additem.class);
-                final String temp_name=name.getText().toString().trim();
-                i.putExtra("username",bundle.getString("username"));
                 startActivity(i);
             }
         });
@@ -51,11 +54,11 @@ public class owners_options extends AppCompatActivity {
         signout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferenceForOwner.clearUserName(owners_options.this);
                 Intent i=new Intent(owners_options.this,OwnerMain.class);
                 Toast.makeText(owners_options.this,"Succesfully Looged Out",Toast.LENGTH_LONG).show();
-                startActivity(i);
+                SharedPreferencesApp.setSessionState(owners_options.this,"NULL");
                 finish();
+                startActivity(i);
             }
         });
 
@@ -63,8 +66,7 @@ public class owners_options extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i= new Intent(owners_options.this, RecyclerView_for_owners.class);
-                i.putExtra("username",bundle.getString("username"));
-
+                finish();
                 startActivity(i);
             }
         });

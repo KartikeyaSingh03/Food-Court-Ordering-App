@@ -14,7 +14,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,6 +33,7 @@ import com.example.foodsetgo.R;
 import com.example.foodsetgo.fooditem;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -39,14 +51,14 @@ public class additem extends AppCompatActivity {
     Uri filePath;
     String imgname;
     private ImageView imageView;
-
+    String email,currentuser;
+    FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     public final int PICK_IMAGE_REQUEST = 71;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_additem);
-        final Bundle bundle = getIntent().getExtras();
         spinner=findViewById(R.id.spinner);
         foodname=findViewById(R.id.foodname);
         price=findViewById(R.id.price);
@@ -54,6 +66,8 @@ public class additem extends AppCompatActivity {
         btnchoose=findViewById(R.id.chooseimage);
         imageView = (ImageView) findViewById(R.id.imgView);
 
+        currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        email= FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
         ArrayAdapter<String> adapter =new ArrayAdapter<String>(additem.this,android.R.layout.simple_list_item_1,
                 getResources().getStringArray(R.array.status));
@@ -81,18 +95,15 @@ public class additem extends AppCompatActivity {
 
                 final String itemname=foodname.getText().toString().trim();
                 final String itemprice=price.getText().toString().trim();
-                final String username=bundle.getString("username").trim();
 
-                final fooditem temp = new fooditem(itemname,itemprice, text,"",username);
+                final fooditem temp = new fooditem(itemname,itemprice, text,"",email);
 
                 DatabaseReference root=FirebaseDatabase.getInstance().getReference();
-                   root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Name").setValue(temp.getName() );
-                   root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Price").setValue(temp.getPrice());
-                   root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Status").setValue(temp.getStatus());
-                root.child("Restaurants").child(username).child("menu").child(temp.getName()).child("Username").setValue(temp.getUsername());
-
-
-                uploadImage(temp.getName(),username);
+                   root.child("Restaurants").child(currentuser).child("menu").child(temp.getName()).child("Name").setValue(temp.getName() );
+                   root.child("Restaurants").child(currentuser).child("menu").child(temp.getName()).child("Price").setValue(temp.getPrice());
+                   root.child("Restaurants").child(currentuser).child("menu").child(temp.getName()).child("Status").setValue(temp.getStatus());
+                root.child("Restaurants").child(currentuser).child("menu").child(temp.getName()).child("Username").setValue(temp.getUsername());
+                uploadImage(temp.getName(),currentuser);
 
             }
 

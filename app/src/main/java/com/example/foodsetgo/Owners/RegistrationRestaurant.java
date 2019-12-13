@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.foodsetgo.R;
 
+import java.security.MessageDigest;
+
 public class RegistrationRestaurant extends AppCompatActivity {
 
     EditText username;
@@ -40,9 +42,9 @@ public class RegistrationRestaurant extends AppCompatActivity {
     }
 
     public void Next() {
-        String temp_username = username.getText().toString().trim();
-        String temp_password = password.getText().toString().trim();
-        String temp_confirm = confirm_password.getText().toString().trim();
+        String temp_username = (username.getText().toString().trim());
+        String temp_password = (password.getText().toString().trim());
+        String temp_confirm = (confirm_password.getText().toString().trim());
         if (temp_username.isEmpty() == true)
             Toast.makeText(this, "Please Restaurant's Email!", Toast.LENGTH_LONG).show();
         else if (temp_password.isEmpty() == true)
@@ -59,11 +61,31 @@ public class RegistrationRestaurant extends AppCompatActivity {
     public void moveToNext() {
         String temp_username = "", temp_password = "";
         Intent i = new Intent(RegistrationRestaurant.this, RegistrationRestaurant1.class);
-        temp_username = username.getText().toString().trim();
+        temp_username = (username.getText().toString().trim());
         i.putExtra("username", temp_username);
-        temp_password = password.getText().toString().trim();
+        temp_password = (password.getText().toString().trim());
         i.putExtra("password", temp_password);
-        startActivity(i);
         finish();
+        startActivity(i);
     }
+
+    public static String sha256(String base) {
+        try{
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(base.getBytes("UTF-8"));
+            StringBuffer hexString = new StringBuffer();
+
+            for (int i = 0; i < hash.length; i++) {
+                String hex = Integer.toHexString(0xff & hash[i]);
+                if(hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+        } catch(Exception ex){
+            throw new RuntimeException(ex);
+        }
+    }
+
 }
+

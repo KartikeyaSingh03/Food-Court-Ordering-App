@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     Button customerBtn;
     Button ownerBtn;
     private FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,16 +38,24 @@ public class MainActivity extends AppCompatActivity {
         customerBtn=(Button)findViewById(R.id.Customer);
         ownerBtn=(Button)findViewById(R.id.Owner);
         firebaseAuth = FirebaseAuth.getInstance();
-        if(firebaseAuth.getCurrentUser() != null){
-            //close this activity
-            finish();
-            //opening profile activity
-            startActivity(new Intent(getApplicationContext(), UserHome.class));
+
+        if(SharedPreferencesApp.getSessionState(MainActivity.this).equals("NULL")==false) {
+
+            if(SharedPreferencesApp.getSessionState(MainActivity.this).equals("User"))
+            {
+                finish();
+                //opening profile activity
+                startActivity(new Intent(getApplicationContext(), UserHome.class));
+            }
+            else
+            {
+                finish();
+                //opening owner's options activity
+                startActivity(new Intent(getApplicationContext(), com.example.foodsetgo.Owners.owners_options.class));
+            }
+
         }
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if(account != null) {
-            startActivity(new Intent(MainActivity.this, UserHome.class));
-        }
+
         customerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,36 +72,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    String temp=SharedPreferenceForOwner.getUserName(MainActivity.this);
-                    if(temp.isEmpty()==false)
-                    {
-                        final Intent i=new Intent(MainActivity.this, com.example.foodsetgo.Owners.owners_options.class);
-                        i.putExtra("username",temp);
 
 
-                        DatabaseReference root=FirebaseDatabase.getInstance().getReference().child("Restaurants").child(temp);
-                        root.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if(dataSnapshot!=null)
-                                {
-                                    Toast.makeText(MainActivity.this,"Welcome "+dataSnapshot.child("name").getValue(),Toast.LENGTH_LONG).show();
-                                    startActivity(i);
-                                    finish();
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
-                    }
-                    else {
                         Intent i = new Intent(MainActivity.this, com.example.foodsetgo.Owners.OwnerMain.class);
+                        finish();
                         startActivity(i);
-                    }
+
                 }
                 catch(Exception e){
                     Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();

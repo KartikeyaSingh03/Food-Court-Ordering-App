@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.foodsetgo.R;
 import com.example.foodsetgo.foodadapter;
 import com.example.foodsetgo.fooditem;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,7 +25,7 @@ public class RecyclerView_for_owners extends AppCompatActivity {
     private RecyclerView rv;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adap;
-
+    String email,username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +33,13 @@ public class RecyclerView_for_owners extends AppCompatActivity {
         setContentView(R.layout.activity_recycler_view_for_owners);
         rv =findViewById(R.id.rview);
         rv.setHasFixedSize(true);
-        Bundle bundle=getIntent().getExtras();
-        final String username=bundle.getString("username");
 
         layoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(layoutManager);
         final List<fooditem> listmenus= new ArrayList<>();
 
+        email= FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        username=FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         DatabaseReference root=FirebaseDatabase.getInstance().getReference();
         root.child("Restaurants").child(username).child("menu").addValueEventListener(new ValueEventListener() {

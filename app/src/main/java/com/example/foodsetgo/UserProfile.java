@@ -51,6 +51,7 @@ public class UserProfile extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         change_pwd=findViewById(R.id.ChangePwd);
         Edit =findViewById(R.id.EditProfile);
+
         GoogleSignInAccount acct =  GoogleSignIn.getLastSignedInAccount(UserProfile.this);
         if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
             currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -145,6 +146,7 @@ public class UserProfile extends AppCompatActivity {
                     FirebaseAuth.getInstance().signOut();
                     finish();
                     Intent in = new Intent(UserProfile.this,CustomerMain.class);
+
                     startActivity(in);
                     Toast.makeText(UserProfile.this,"Logged out Successfully",Toast.LENGTH_LONG).show();
                 }
@@ -160,6 +162,7 @@ public class UserProfile extends AppCompatActivity {
                     .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+
                             Toast.makeText(UserProfile.this, "Successfully signed out", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(UserProfile.this, CustomerMain.class));
                             finish();
