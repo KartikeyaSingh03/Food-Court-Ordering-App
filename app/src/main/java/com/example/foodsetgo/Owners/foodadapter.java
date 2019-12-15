@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,21 +46,22 @@ public class foodadapter extends RecyclerView.Adapter<foodadapter.ViewHolder> {
         final fooditem listmenu=listmenus.get(position);
         holder.foodname.setText(listmenu.getName());
         FirebaseStorage storage=FirebaseStorage.getInstance();
+
+        FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
+        String uid=firebaseAuth.getCurrentUser().getUid();
         StorageReference storageRef=storage.getReferenceFromUrl("gs://foodsetgo-120b6.appspot.com");
-        storageRef.child("images/"+listmenu.getUsername()+'/'+listmenu.getName()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageRef.child("images/"+uid+'/'+listmenu.getName()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 // Got the download URL for 'users/me/profile.png'
                final String strurl=uri.toString();
                 Picasso.get().load(strurl).into(holder.imageView);
-
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
-                holder.foodname.setText( "fail");
+                holder.foodname.setText("FAIL");
 
             }
         });

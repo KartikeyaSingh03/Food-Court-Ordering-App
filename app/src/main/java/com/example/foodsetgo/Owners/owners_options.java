@@ -57,7 +57,6 @@ public class owners_options extends AppCompatActivity {
                 Intent i=new Intent(owners_options.this,OwnerMain.class);
                 Toast.makeText(owners_options.this,"Succesfully Looged Out",Toast.LENGTH_LONG).show();
                 SharedPreferencesApp.setSessionState(owners_options.this,"NULL");
-                finish();
                 startActivity(i);
             }
         });
@@ -66,7 +65,6 @@ public class owners_options extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i= new Intent(owners_options.this, RecyclerView_for_owners.class);
-                finish();
                 startActivity(i);
             }
         });
