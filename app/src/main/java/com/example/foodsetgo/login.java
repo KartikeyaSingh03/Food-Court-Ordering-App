@@ -168,6 +168,7 @@ public class login extends AppCompatActivity {
                                         Toast.makeText(login.this,"Error",Toast.LENGTH_LONG).show();
                                     }
                                     else {
+                                        SharedPreferencesApp.setSessionState(login.this,"User");
                                         finish();
                                         startActivity(new Intent(getApplicationContext(), UserHome.class));
                                     }

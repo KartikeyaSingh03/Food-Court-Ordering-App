@@ -57,7 +57,6 @@ public class OwnerMain extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i=new Intent(OwnerMain.this,RegistrationRestaurant.class);
                 startActivity(i);
-                finish();
             }
         });
     }
