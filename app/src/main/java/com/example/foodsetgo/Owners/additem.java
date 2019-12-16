@@ -155,6 +155,7 @@ public class additem extends AppCompatActivity {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
                             Toast.makeText(additem.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            finish();
 
 
                         }

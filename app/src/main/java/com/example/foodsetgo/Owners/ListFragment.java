@@ -1,9 +1,11 @@
 package com.example.foodsetgo.Owners;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,7 @@ public class ListFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adap;
     private View viewroot;
+    private Button button;
     String email,username;
     @Nullable
     @Override
@@ -37,7 +40,14 @@ public class ListFragment extends Fragment {
 
         rv=viewroot.findViewById(R.id.rview);
         rv.setHasFixedSize(true);
+        button=viewroot.findViewById(R.id.additem);
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(),additem.class));
+            }
+        });
         layoutManager = new LinearLayoutManager(getContext());
         rv.setLayoutManager(layoutManager);
         final List<fooditem> listmenus= new ArrayList<>();
