@@ -85,7 +85,7 @@ public class OwnerMain extends AppCompatActivity {
                                         Toast.makeText(OwnerMain.this,"Error",Toast.LENGTH_LONG).show();
                                     }
                                     else {
-                                        Intent i=new Intent(OwnerMain.this,owners_options.class);
+                                        Intent i=new Intent(OwnerMain.this,Res_Home.class);
                                         SharedPreferencesApp.setSessionState(OwnerMain.this,"Owner");
                                         finish();
                                         startActivity(i);

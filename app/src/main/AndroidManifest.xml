@@ -12,8 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Owners.Res_Home"></activity>
         <activity android:name=".UserHome" />
-        <activity android:name=".RestaurantsList" />
         <activity
             android:name=".UserSide"
             android:label="@string/title_activity_user_side" />

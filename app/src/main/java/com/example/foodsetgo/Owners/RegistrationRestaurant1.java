@@ -83,7 +83,7 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
                                     root.child("Restaurants").child(currentuser).setValue(u);
                                     SharedPreferencesApp.setSessionState(RegistrationRestaurant1.this,"Owner");
                                     finish();
-                                    startActivity(new Intent(RegistrationRestaurant1.this, owners_options.class));
+                                    startActivity(new Intent(RegistrationRestaurant1.this, Res_Home.class));
 
 
                                 }else{

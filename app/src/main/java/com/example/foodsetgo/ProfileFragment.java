@@ -144,6 +144,7 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     FirebaseAuth.getInstance().signOut();
+                    SharedPreferencesApp.setSessionState(getContext(),"NULL");
                     getActivity().finish();
                     Intent in = new Intent(getContext(),CustomerMain.class);
                     startActivity(in);
@@ -161,6 +162,7 @@ public class ProfileFragment extends Fragment {
                     .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            SharedPreferencesApp.setSessionState(getContext(),"NULL");
                             Toast.makeText(getContext(), "Successfully signed out", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getContext(), CustomerMain.class));
                             getActivity().finish();

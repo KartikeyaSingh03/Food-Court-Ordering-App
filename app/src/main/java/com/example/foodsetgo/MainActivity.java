@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 finish();
                 //opening owner's options activity
-                startActivity(new Intent(getApplicationContext(), com.example.foodsetgo.Owners.owners_options.class));
+                startActivity(new Intent(getApplicationContext(), com.example.foodsetgo.Owners.Res_Home.class));
             }
 
         }
