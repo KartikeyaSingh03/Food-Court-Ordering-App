@@ -7,6 +7,7 @@
     tools:context=".fragment_owners_list"
     android:background="#f4f8dc"
     >
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,5 +23,6 @@
         android:layout_marginBottom="20dp"
         android:id="@+id/additem"
         />
+
 
 </RelativeLayout>

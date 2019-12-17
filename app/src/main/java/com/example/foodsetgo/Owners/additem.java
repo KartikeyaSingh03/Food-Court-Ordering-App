@@ -156,6 +156,7 @@ public class additem extends AppCompatActivity {
                             progressDialog.dismiss();
                             Toast.makeText(additem.this, "Uploaded", Toast.LENGTH_SHORT).show();
                             finish();
+                            startActivity(new Intent(getApplicationContext(),Res_Home.class));
 
 
                         }

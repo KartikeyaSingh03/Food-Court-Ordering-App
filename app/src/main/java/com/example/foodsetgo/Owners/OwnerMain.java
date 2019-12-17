@@ -48,6 +48,9 @@ public class OwnerMain extends AppCompatActivity {
             public void onClick(View view) {
                 String temp_username=(emailaddress.getText().toString().trim());
                 String temp_password=(password.getText().toString().trim());
+                if(temp_password.isEmpty()||temp_username.isEmpty())
+                    Toast.makeText(OwnerMain.this,"Please Give Required Informations",Toast.LENGTH_LONG).show();
+                else
                 checklogin(temp_username,temp_password);
 
             }
