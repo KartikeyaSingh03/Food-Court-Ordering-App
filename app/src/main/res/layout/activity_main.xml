@@ -48,6 +48,7 @@
         android:layout_gravity="center"
         android:id="@+id/Customer"
         android:textStyle="bold"
+        android:alpha="0.8"
         />
 
     <Button
@@ -62,6 +63,8 @@
         android:layout_gravity="center"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
+        android:alpha="0.8"
+
         />
 </LinearLayout>
 

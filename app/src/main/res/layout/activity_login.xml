@@ -16,44 +16,61 @@
         />
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
         android:hint="Username"
         android:textSize="25dp"
         android:textColor="#000000"
         android:id="@+id/edit_email"
         android:layout_marginLeft="30dp"
-        android:textColorHint="#696969"
         android:layout_marginTop="140dp"
         android:inputType="textEmailAddress"
+        android:background="@drawable/edittext_round"
+        android:drawableLeft="@drawable/ic_person_black_24dp"
+        android:paddingLeft="10dp"
+        android:drawablePadding="10dp"
+        android:textColorHint="#fff"
+        android:alpha="0.8"
+        android:layout_centerHorizontal="true"
 
         />
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
         android:hint="Password"
         android:textSize="25dp"
         android:textColor="#000000"
         android:id="@+id/edit_password"
         android:layout_marginLeft="30dp"
-        android:textColorHint="#696969"
         android:layout_below="@+id/edit_email"
         android:layout_marginTop="10dp"
         android:inputType="textPassword"
+        android:background="@drawable/edittext_round"
+        android:drawableLeft="@drawable/ic_lock_black_24dp"
+        android:paddingLeft="10dp"
+        android:drawablePadding="10dp"
+        android:textColorHint="#fff"
+        android:alpha="0.8"
+        android:layout_centerHorizontal="true"
 
         />
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="10dp"
         android:hint="Login"
-        android:textSize="20dp"
+        android:textSize="25dp"
         android:id="@+id/login"
         android:layout_below="@+id/edit_password"
-        android:background="#d3d3d3"
-        android:textColorHint="#000000"
+        android:textColorHint="#fff"
+        android:background="@drawable/round_button"
+        android:alpha="0.8"
+        android:textStyle="bold"
+        android:layout_marginTop="50dp"
+        android:textColor="#fff"
+        android:fontFamily="@font/mainfont"
+        android:layout_centerHorizontal="true"
         />
     <TextView
         android:layout_width="match_parent"
@@ -70,10 +87,12 @@
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
         android:layout_below="@+id/ORtf"
         android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+
+        />
 
 </RelativeLayout>
