@@ -79,7 +79,7 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
                                 if(task.isSuccessful()){
                                     String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                     DatabaseReference root = FirebaseDatabase.getInstance().getReference();
-                                    final RestInfo u=new RestInfo(temp_name,password,temp_contact,temp_address,username);
+                                    final RestInfo u=new RestInfo(temp_name,temp_contact,temp_address,"");
                                     root.child("Restaurants").child(currentuser).setValue(u);
                                     SharedPreferencesApp.setSessionState(RegistrationRestaurant1.this,"Owner");
                                     finish();
@@ -101,23 +101,7 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
         }
 
     }
-    public static String sha256(String base) {
-        try{
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(base.getBytes("UTF-8"));
-            StringBuffer hexString = new StringBuffer();
 
-            for (int i = 0; i < hash.length; i++) {
-                String hex = Integer.toHexString(0xff & hash[i]);
-                if(hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-
-            return hexString.toString();
-        } catch(Exception ex){
-            throw new RuntimeException(ex);
-        }
-    }
 
     public boolean isValidContact(String s){
         if(s.length()!=10)

@@ -26,7 +26,7 @@ public class OwnersProfileFragment extends Fragment {
 
     private View view;
     TextView RestName,OwnerEmail,Contact,address;
-    Button edit,logout;
+    Button edit,logout,addPhoto;
     String email,uid;
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     DatabaseReference root=FirebaseDatabase.getInstance().getReference();
@@ -41,7 +41,7 @@ public class OwnersProfileFragment extends Fragment {
 
          edit=view.findViewById(R.id.edit_button);
          logout=view.findViewById(R.id.logout_button);
-
+        addPhoto=view.findViewById(R.id.add_photo);
          uid=firebaseAuth.getCurrentUser().getUid();
          email=firebaseAuth.getCurrentUser().getEmail();
         root=root.child("Restaurants").child(uid);
@@ -87,7 +87,13 @@ public class OwnersProfileFragment extends Fragment {
             }
         });
 
-
+        addPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(),AddProfilePhoto.class);
+                startActivity(i);
+            }
+        });
 
 
          return view;

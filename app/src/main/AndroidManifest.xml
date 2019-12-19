@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".restaurantMenu"></activity>
+        <activity android:name=".Owners.AddProfilePhoto"></activity>
+        <activity android:name=".restaurantMenu" />
         <activity android:name=".Owners.Res_Home" />
         <activity android:name=".UserHome" />
         <activity

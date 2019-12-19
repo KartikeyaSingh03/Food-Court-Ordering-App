@@ -2,28 +2,21 @@ package com.example.foodsetgo.Owners;
 
 public class RestInfo {
     private String name;
-    private String password;
     private String contact;
     private String address;
-    private String username;
+    private String photoURL;
 
-    public RestInfo(){}
-
-    public RestInfo(String name, String password, String contact, String address, String username) {
+    public RestInfo(String name, String contact, String address,String url) {
         this.name = name;
-        this.password = password;
         this.contact = contact;
         this.address = address;
-        this.username = username;
+        this.photoURL= url;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
     public String getContact() {
         return contact;
@@ -33,7 +26,7 @@ public class RestInfo {
         return address;
     }
 
-    public String getUsername() {
-        return username;
+    public String getPhotoURL() {
+        return photoURL;
     }
 }
