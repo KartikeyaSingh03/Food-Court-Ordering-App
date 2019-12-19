@@ -4,11 +4,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -17,22 +23,40 @@ public class HomeFragment extends Fragment {
     private ArrayList<String> mNames = new ArrayList<>();
     private ArrayList<String> mImageUrl = new ArrayList<>();
     View Viewroot;
+    FirebaseDatabase database;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState){
         Viewroot=inflater.inflate(R.layout.fragment_home, container, false);
+        database = FirebaseDatabase.getInstance();
         initImageBitmaps();
+
         return Viewroot;
     }
 
     private void initImageBitmaps(){
-        mImageUrl.add("https://www.gstatic.com/webp/gallery/1.jpg");
-        mNames.add("Norway");
+        database.getReference().child("Restaurants").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    String name,url;
+                    if(snapshot.child("name").exists())
+                        name = snapshot.child("name").getValue().toString();
+                    else
+                        name="Name Not Found";
+                    if(snapshot.child("photoURL").exists())
+                        url=  snapshot.child("photoURL").getValue().toString();
+                    else
+                        url="https://firebasestorage.googleapis.com/v0/b/foodsetgo-120b6.appspot.com/o/uploads%2Fic_launcher-web.png?alt=media&token=d838edb8-f5b4-4dc4-9d93-c9ab8f55eed6";
+                    mImageUrl.add(url);
+                    mNames.add(name);
+                }
+            }
 
-        mImageUrl.add("https://www.gstatic.com/webp/gallery/2.jpg");
-        mNames.add("Kayaker");
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        mImageUrl.add("https://www.gstatic.com/webp/gallery/4.jpg");
-        mNames.add("Cherry");
+            }
+        });
         initRecyclerView();
     }
 
