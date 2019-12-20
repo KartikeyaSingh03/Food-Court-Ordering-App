@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodsetgo.R;
 import com.example.foodsetgo.fooditem;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,7 +41,7 @@ public class ListFragment extends Fragment {
 
         rv=viewroot.findViewById(R.id.rview);
         rv.setHasFixedSize(true);
-        button=viewroot.findViewById(R.id.additem);
+        FloatingActionButton button =viewroot.findViewById(R.id.fab);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
