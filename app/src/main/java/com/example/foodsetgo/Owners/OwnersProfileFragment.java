@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.foodsetgo.EditDetails;
 import com.example.foodsetgo.MainActivity;
 import com.example.foodsetgo.R;
 import com.example.foodsetgo.SharedPreferencesApp;
@@ -91,6 +92,14 @@ public class OwnersProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getContext(),AddProfilePhoto.class);
+                startActivity(i);
+            }
+        });
+
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i= new Intent(getContext(), EditDetailsOwner.class);
                 startActivity(i);
             }
         });
