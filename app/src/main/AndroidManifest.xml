@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".MyFirebaseApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -17,9 +16,6 @@
         <activity android:name=".restaurantMenu" />
         <activity android:name=".Owners.Res_Home" />
         <activity android:name=".UserHome" />
-        <activity
-            android:name=".UserSide"
-            android:label="@string/title_activity_user_side" />
         <activity android:name=".EditDetails" />
         <activity android:name=".ChangePassword" />
         <activity android:name=".CustomerMain" />
@@ -27,12 +23,10 @@
         <activity android:name=".UserProfile" />
         <activity android:name=".login" />
         <activity android:name=".signup" />
-        <activity android:name=".Owners.owners_options" />
         <activity android:name=".Owners.additem" />
         <activity android:name=".Owners.OwnerMain" />
         <activity android:name=".Owners.RegistrationRestaurant" />
         <activity android:name=".Owners.RegistrationRestaurant1" />
-        <activity android:name=".Owners.RecyclerView_for_owners" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
