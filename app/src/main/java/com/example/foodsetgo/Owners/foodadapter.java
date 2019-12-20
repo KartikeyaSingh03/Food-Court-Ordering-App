@@ -1,6 +1,7 @@
 package com.example.foodsetgo.Owners;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodsetgo.R;
@@ -65,7 +67,13 @@ public class foodadapter extends RecyclerView.Adapter<foodadapter.ViewHolder> {
 
             }
         });
-
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(view.getContext(),EditFoodItem.class);
+                view.getContext().startActivity(i);
+            }
+        });
 
     }
 
@@ -78,10 +86,12 @@ public class foodadapter extends RecyclerView.Adapter<foodadapter.ViewHolder> {
 
         public TextView foodname;
         public ImageView imageView;
+        public CardView cardView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             foodname=itemView.findViewById(R.id.foodname);
             imageView=itemView.findViewById(R.id.foodimage);
+            cardView=itemView.findViewById(R.id.courseItem);
         }
     }
 
