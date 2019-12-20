@@ -79,7 +79,7 @@ public class RegistrationRestaurant1 extends AppCompatActivity {
                                 if(task.isSuccessful()){
                                     String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                     DatabaseReference root = FirebaseDatabase.getInstance().getReference();
-                                    final RestInfo u=new RestInfo(temp_name,temp_contact,temp_address,"");
+                                    final RestInfo u=new RestInfo(temp_name,temp_contact,temp_address,"",currentuser);
                                     root.child("Restaurants").child(currentuser).setValue(u);
                                     SharedPreferencesApp.setSessionState(RegistrationRestaurant1.this,"Owner");
                                     finish();

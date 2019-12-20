@@ -141,14 +141,14 @@ public class additem extends AppCompatActivity {
     }
     FirebaseStorage storage=FirebaseStorage.getInstance();
     StorageReference storageRef=storage.getReference();
-    private void uploadImage(String Name,String RestName) {
+    private void uploadImage(String Name,String RestUid) {
 
         if(filePath != null)
         {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-            StorageReference ref = storageRef.child("images").child(RestName).child(Name);
+            StorageReference ref = storageRef.child("images").child(RestUid).child(Name);
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override

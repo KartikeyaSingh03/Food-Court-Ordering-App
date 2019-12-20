@@ -1,54 +1,66 @@
 package com.example.foodsetgo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.foodsetgo.Owners.RestInfo;
+import com.example.foodsetgo.Owners.additem;
+import com.example.foodsetgo.Owners.foodadapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
+    private RecyclerView rv;
+    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.Adapter adap;
+    private View viewroot;
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        viewroot=inflater.inflate(R.layout.fragment_home,container,false);
 
-    private ArrayList<String> mNames = new ArrayList<>();
-    private ArrayList<String> mImageUrl = new ArrayList<>();
-    View Viewroot;
-    FirebaseDatabase database;
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState){
-        Viewroot=inflater.inflate(R.layout.fragment_home, container, false);
-        database = FirebaseDatabase.getInstance();
-        initImageBitmaps();
+        rv=viewroot.findViewById(R.id.recycler_view);
+        rv.setHasFixedSize(true);
 
-        return Viewroot;
-    }
+        layoutManager = new LinearLayoutManager(getContext());
+        rv.setLayoutManager(layoutManager);
+        final List<RestInfo> listRests= new ArrayList<>();
 
-    private void initImageBitmaps(){
-        database.getReference().child("Restaurants").addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+        DatabaseReference root= FirebaseDatabase.getInstance().getReference();
+        root.child("Restaurants").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    String name,url;
-                    if(snapshot.child("name").exists())
-                        name = snapshot.child("name").getValue().toString();
-                    else
-                        name="Name Not Found";
-                    if(snapshot.child("photoURL").exists())
-                        url=  snapshot.child("photoURL").getValue().toString();
-                    else
-                        url="https://firebasestorage.googleapis.com/v0/b/foodsetgo-120b6.appspot.com/o/uploads%2Fic_launcher-web.png?alt=media&token=d838edb8-f5b4-4dc4-9d93-c9ab8f55eed6";
-                    mImageUrl.add(url);
-                    mNames.add(name);
+                if(dataSnapshot.exists()==true)
+                {
+                    for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+                    {
+                        RestInfo f=dataSnapshot1.getValue(RestInfo.class);
+                        listRests.add(f);
+                    }
+                    adap =new RestaurantListAdapter(listRests, getContext());
+                    rv.setAdapter(adap);
+
                 }
             }
 
@@ -57,13 +69,6 @@ public class HomeFragment extends Fragment {
 
             }
         });
-        initRecyclerView();
-    }
-
-    private void initRecyclerView(){
-        RecyclerView recyclerView = Viewroot.findViewById(R.id.recycler_view);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(mImageUrl,mNames,getContext());
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        return viewroot;
     }
 }

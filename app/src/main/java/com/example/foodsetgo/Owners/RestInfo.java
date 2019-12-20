@@ -5,18 +5,23 @@ public class RestInfo {
     private String contact;
     private String address;
     private String photoURL;
+    private String RestUid;
+    public RestInfo()
+    {
 
-    public RestInfo(String name, String contact, String address,String url) {
+    }
+
+    public RestInfo(String name, String contact, String address, String photoURL, String restUid) {
         this.name = name;
         this.contact = contact;
         this.address = address;
-        this.photoURL= url;
+        this.photoURL = photoURL;
+        RestUid = restUid;
     }
 
     public String getName() {
         return name;
     }
-
 
     public String getContact() {
         return contact;
@@ -28,5 +33,9 @@ public class RestInfo {
 
     public String getPhotoURL() {
         return photoURL;
+    }
+
+    public String getRestUid() {
+        return RestUid;
     }
 }
