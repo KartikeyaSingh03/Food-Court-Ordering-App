@@ -39,21 +39,24 @@ public class MainActivity extends AppCompatActivity {
         ownerBtn=(Button)findViewById(R.id.Owner);
         firebaseAuth = FirebaseAuth.getInstance();
 
-        if(SharedPreferencesApp.getSessionState(MainActivity.this).equals("NULL")==false) {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if(account != null) {
+            startActivity(new Intent(MainActivity.this, UserHome.class));
+        }
+        else {
+            if (SharedPreferencesApp.getSessionState(MainActivity.this).equals("NULL") == false) {
 
-            if(SharedPreferencesApp.getSessionState(MainActivity.this).equals("User"))
-            {
-                finish();
-                //opening profile activity
-                startActivity(new Intent(getApplicationContext(), UserHome.class));
-            }
-            else
-            {
-                finish();
-                //opening owner's options activity
-                startActivity(new Intent(getApplicationContext(), com.example.foodsetgo.Owners.Res_Home.class));
-            }
+                if (SharedPreferencesApp.getSessionState(MainActivity.this).equals("User")) {
+                    finish();
+                    //opening profile activity
+                    startActivity(new Intent(getApplicationContext(), UserHome.class));
+                } else {
+                    finish();
+                    //opening owner's options activity
+                    startActivity(new Intent(getApplicationContext(), com.example.foodsetgo.Owners.Res_Home.class));
+                }
 
+            }
         }
 
         customerBtn.setOnClickListener(new View.OnClickListener() {
