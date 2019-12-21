@@ -97,9 +97,9 @@ public class AddProfilePhoto extends AppCompatActivity {
         {
             filePath = data.getData();
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                mImageView.setImageURI(filePath);
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 e.printStackTrace();
             }

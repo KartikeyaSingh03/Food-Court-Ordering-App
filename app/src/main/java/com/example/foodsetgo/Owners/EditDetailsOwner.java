@@ -60,7 +60,7 @@ public class EditDetailsOwner extends AppCompatActivity {
                         root.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.child(Uid).exists()){
+                                if(dataSnapshot.child("Restaurants").child(Uid).exists()){
                                     root.child("Restaurants").child(Uid).child("name").setValue(newName);
                                     root.child("Restaurants").child(Uid).child("contact").setValue(newContact);
                                     root.child("Restaurants").child(Uid).child("address").setValue(newAdd);
