@@ -26,7 +26,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
     private List<RestInfo> listRests;
     private Context context;
-
+    String uid;
     public RestaurantListAdapter(List<RestInfo> listRests, Context context) {
         this.listRests = listRests;
         this.context = context;
@@ -48,7 +48,8 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         FirebaseStorage storage=FirebaseStorage.getInstance();
 
         FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
-        String uid=firebaseAuth.getCurrentUser().getUid();
+        if(firebaseAuth.getCurrentUser()!=null)
+            uid=firebaseAuth.getCurrentUser().getUid();
         StorageReference storageRef=storage.getReferenceFromUrl("gs://foodsetgo-120b6.appspot.com");
 
 
