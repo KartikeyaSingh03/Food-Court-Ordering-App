@@ -130,10 +130,8 @@ public class EditFoodItem extends AppCompatActivity {
                 add.setEnabled(true);
                 btnchoose.setEnabled(true);
                 price.setEnabled(true);
-                foodname.setEnabled(true);
                 spinner.setEnabled(true);
                 price.setTextColor(Color.parseColor("#000000"));
-                foodname.setTextColor(Color.parseColor("#000000"));
             }
         });
 
@@ -152,14 +150,12 @@ public class EditFoodItem extends AppCompatActivity {
 
                 final String text=spinner.getSelectedItem().toString().trim();
 
-                final String itemname=foodname.getText().toString().trim();
+                final String itemname=Oldname;
                 final String itemprice=price.getText().toString().trim();
 
                 final fooditem temp = new fooditem(itemname,itemprice, text,"",email);
 
                 DatabaseReference root= FirebaseDatabase.getInstance().getReference();
-                root.child("Restaurants").child(currentuser).child("menu").child(Oldname).removeValue();
-                root.child("Restaurants").child(currentuser).child("menu").child(temp.getName()).child("Name").setValue(temp.getName() );
                 root.child("Restaurants").child(currentuser).child("menu").child(temp.getName()).child("Price").setValue(temp.getPrice());
                 root.child("Restaurants").child(currentuser).child("menu").child(temp.getName()).child("Status").setValue(temp.getStatus());
                 root.child("Restaurants").child(currentuser).child("menu").child(temp.getName()).child("Username").setValue(temp.getUsername());
