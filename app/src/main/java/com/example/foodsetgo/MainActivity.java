@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     Intent i = new Intent(MainActivity.this, CustomerMain.class);
+                    finish();
                     startActivity(i);
                 }
                 catch(Exception e){
