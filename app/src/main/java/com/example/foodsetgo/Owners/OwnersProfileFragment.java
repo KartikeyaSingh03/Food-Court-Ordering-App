@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -85,6 +86,7 @@ public class OwnersProfileFragment extends Fragment {
                 getActivity().finish();
                 SharedPreferencesApp.setSessionState(getContext(),"NULL");
                 startActivity(new Intent(getContext(), MainActivity.class));
+                Toast.makeText(getContext(),"Logged Out Successfully",Toast.LENGTH_LONG).show();
             }
         });
 

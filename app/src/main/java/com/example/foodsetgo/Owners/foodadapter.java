@@ -71,6 +71,7 @@ public class foodadapter extends RecyclerView.Adapter<foodadapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(view.getContext(),EditFoodItem.class);
+                i.putExtra("FoodName",listmenu.getName());
                 view.getContext().startActivity(i);
             }
         });
