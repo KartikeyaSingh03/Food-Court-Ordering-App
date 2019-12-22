@@ -88,7 +88,7 @@
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
         android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_below="@+id/ORtf"
         android:layout_marginTop="16dp"
         android:layout_centerHorizontal="true"

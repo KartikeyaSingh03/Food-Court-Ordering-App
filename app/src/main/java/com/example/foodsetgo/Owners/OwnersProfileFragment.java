@@ -1,11 +1,13 @@
 package com.example.foodsetgo.Owners;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,12 +19,17 @@ import com.example.foodsetgo.EditDetails;
 import com.example.foodsetgo.MainActivity;
 import com.example.foodsetgo.R;
 import com.example.foodsetgo.SharedPreferencesApp;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 public class OwnersProfileFragment extends Fragment {
 
@@ -32,6 +39,8 @@ public class OwnersProfileFragment extends Fragment {
     String email,uid;
     FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
     DatabaseReference root=FirebaseDatabase.getInstance().getReference();
+    ImageView imageView;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,7 +49,7 @@ public class OwnersProfileFragment extends Fragment {
          OwnerEmail=view.findViewById(R.id.owners_email_address);
          Contact=view.findViewById(R.id.res_number);
          address=view.findViewById(R.id.res_address);
-
+         imageView=view.findViewById(R.id.profileImg);
          edit=view.findViewById(R.id.edit_button);
          logout=view.findViewById(R.id.logout_button);
         addPhoto=view.findViewById(R.id.add_photo);
@@ -49,6 +58,22 @@ public class OwnersProfileFragment extends Fragment {
         root=root.child("Restaurants").child(uid);
 
         OwnerEmail.setText(email);
+        StorageReference storageRef=FirebaseStorage.getInstance().getReferenceFromUrl("gs://foodsetgo-120b6.appspot.com");
+
+        storageRef.child("images/"+uid+'/'+"Restaurant_Picture").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
+                final String strurl=uri.toString();
+                Picasso.get().load(strurl).into(imageView);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+
+            }
+        });
 
         root.addValueEventListener(new ValueEventListener() {
             @Override
