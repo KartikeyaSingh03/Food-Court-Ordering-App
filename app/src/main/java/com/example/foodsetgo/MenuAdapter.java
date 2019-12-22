@@ -1,8 +1,7 @@
 package com.example.foodsetgo;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,29 +9,30 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.foodsetgo.Owners.EditFoodItem;
+import com.example.foodsetgo.Owners.foodadapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.net.URL;
 import java.util.List;
 
-public class foodadapter extends RecyclerView.Adapter<foodadapter.ViewHolder> {
+public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
     private List<fooditem> listmenus;
     private Context context;
-
-    public foodadapter(List<fooditem> listmenus, Context context) {
+    private String uid;
+    public MenuAdapter(List<fooditem> listmenus, Context context,String uid) {
         this.listmenus = listmenus;
         this.context = context;
+        this.uid=uid;
     }
 
 
@@ -40,7 +40,7 @@ public class foodadapter extends RecyclerView.Adapter<foodadapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_food,parent,false);
+                .inflate(R.layout.layout_menu,parent,false);
         return new ViewHolder(v);
     }
 
@@ -49,21 +49,21 @@ public class foodadapter extends RecyclerView.Adapter<foodadapter.ViewHolder> {
         final fooditem listmenu=listmenus.get(position);
         holder.foodname.setText(listmenu.getName());
         FirebaseStorage storage=FirebaseStorage.getInstance();
+
+
         StorageReference storageRef=storage.getReferenceFromUrl("gs://foodsetgo-120b6.appspot.com");
-        storageRef.child("images/"+listmenu.getName()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageRef.child("images/"+uid+'/'+listmenu.getName()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 // Got the download URL for 'users/me/profile.png'
-               final String strurl=uri.toString();
+                final String strurl=uri.toString();
                 Picasso.get().load(strurl).into(holder.imageView);
-
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
-                holder.foodname.setText("hello2");
+                holder.foodname.setText("FAIL");
 
             }
         });
@@ -80,13 +80,14 @@ public class foodadapter extends RecyclerView.Adapter<foodadapter.ViewHolder> {
 
         public TextView foodname;
         public ImageView imageView;
+        public CardView cardView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            foodname=itemView.findViewById(R.id.foodname);
-            imageView=itemView.findViewById(R.id.foodimage);
+            foodname=itemView.findViewById(R.id.FoodName_menu);
+            imageView=itemView.findViewById(R.id.FoodImage_menu);
+            cardView=itemView.findViewById(R.id.Menu_cards);
         }
     }
 
 
 }
-

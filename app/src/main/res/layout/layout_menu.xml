@@ -8,7 +8,7 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="6dp"
     app:cardElevation="6dp"
-    android:id="@+id/Rest_cards"
+    android:id="@+id/Menu_cards"
 
     >
 
@@ -32,7 +32,7 @@
                 android:scaleType="centerCrop"
                 android:layout_height="110dp"
                 android:layout_marginBottom="5dp"
-                android:id="@+id/RestImage"
+                android:id="@+id/FoodImage_menu"
 
                 />
         </androidx.cardview.widget.CardView>
@@ -42,7 +42,7 @@
             android:layout_height="match_parent"
             android:text="RestNme"
             android:textSize="30sp"
-            android:id="@+id/RestName"
+            android:id="@+id/FoodName_menu"
             android:layout_marginLeft="10dp"
             />
     </LinearLayout>

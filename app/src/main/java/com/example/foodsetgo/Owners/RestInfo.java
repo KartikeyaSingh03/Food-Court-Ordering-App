@@ -5,7 +5,7 @@ public class RestInfo {
     private String contact;
     private String address;
     private String photoURL;
-    private String RestUid;
+    private String restUid;
     public RestInfo()
     {
 
@@ -16,7 +16,7 @@ public class RestInfo {
         this.contact = contact;
         this.address = address;
         this.photoURL = photoURL;
-        RestUid = restUid;
+        this.restUid = restUid;
     }
 
     public String getName() {
@@ -36,6 +36,6 @@ public class RestInfo {
     }
 
     public String getRestUid() {
-        return RestUid;
+        return restUid;
     }
 }

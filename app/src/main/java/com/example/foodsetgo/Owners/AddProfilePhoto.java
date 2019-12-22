@@ -97,7 +97,7 @@ public class AddProfilePhoto extends AppCompatActivity {
         {
             filePath = data.getData();
             try {
-                mImageView.setImageURI(filePath);
+                Picasso.get().load(filePath).into(mImageView);
             }
             catch (Exception e)
             {
@@ -124,7 +124,7 @@ public class AddProfilePhoto extends AppCompatActivity {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-            StorageReference ref = storageRef.child("images").child(RestUid).child("Restaurant_Picture").child(Name);
+            StorageReference ref = storageRef.child("images").child(RestUid).child("Restaurant_Picture");
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override

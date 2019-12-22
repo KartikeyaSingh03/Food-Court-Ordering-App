@@ -1,6 +1,7 @@
 package com.example.foodsetgo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodsetgo.Owners.Res_Home;
@@ -43,8 +45,8 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        final RestInfo listmenu=listRests.get(position);
-        holder.RestName.setText(listmenu.getName());
+        final RestInfo listRest=listRests.get(position);
+        holder.RestName.setText(listRest.getName());
         FirebaseStorage storage=FirebaseStorage.getInstance();
 
         FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
@@ -53,7 +55,7 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
         StorageReference storageRef=storage.getReferenceFromUrl("gs://foodsetgo-120b6.appspot.com");
 
 
-        storageRef.child("images/"+listmenu.getRestUid()+'/'+"Restaurant_Picture").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageRef.child("images/"+listRest.getRestUid()+'/'+"Restaurant_Picture").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 // Got the download URL for 'users/me/profile.png'
@@ -68,6 +70,15 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
             }
         });
+        holder.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(context,restaurantMenu.class);
+                i.putExtra("UID",listRest.getRestUid());
+                context.startActivity(i);
+            }
+
+        });
 
 
     }
@@ -81,10 +92,12 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
 
         public TextView RestName;
         public ImageView imageView;
+        public CardView card;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             RestName =itemView.findViewById(R.id.RestName);
             imageView=itemView.findViewById(R.id.RestImage);
+            card=itemView.findViewById(R.id.Rest_cards);
         }
     }
 }
