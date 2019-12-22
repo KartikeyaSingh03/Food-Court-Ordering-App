@@ -1,29 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    >
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/main_image"
+        android:scaleType="centerCrop"
+        android:id="@+id/imageview"
+        android:alpha="0.5"
+        />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/profileImg"
+        android:src="@drawable/ic_person_black_24dp"
+
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/owners_res_name"
+        android:layout_below="@+id/profileImg"
+        android:layout_marginTop="10dp"
+
         >
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:text="Restaurant's Name:"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:textColor="#000"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="25dp"
             android:text="Name"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
             android:id="@+id/res_name"
+            android:layout_marginLeft="20dp"
+            android:textColor="#000"
+
             />
     </LinearLayout>
 
@@ -32,7 +53,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@+id/owners_res_name"
-        android:layout_marginTop="20dp"
         android:id="@+id/owners_email"
         >
         <TextView
@@ -40,17 +60,20 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:text="Email Address"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:textColor="#000"
+
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="25dp"
             android:text="Email"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
             android:id="@+id/owners_email_address"
+            android:layout_marginLeft="20dp"
+            android:textColor="#000"
+
             />
     </LinearLayout>
     <LinearLayout
@@ -58,33 +81,37 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@+id/owners_email"
-        android:layout_marginTop="20dp"
         android:id="@+id/owners_contact_number"
+
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:text="Contact Number"
-            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
+            android:textColor="#000"
+
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="25dp"
             android:text="Number"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
             android:id="@+id/res_number"
+            android:layout_marginLeft="20dp"
+            android:textColor="#000"
+
+
             />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@+id/owners_contact_number"
-        android:layout_marginTop="20dp"
         android:id="@+id/Res_address"
         >
         <TextView
@@ -92,47 +119,65 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:text="Restaurant's Address"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:textColor="#000"
+
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="25dp"
             android:text="Address"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
             android:id="@+id/res_address"
+            android:layout_marginLeft="20dp"
+            android:textColor="#000"
+
             />
     </LinearLayout>
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/Res_address"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="Edit Details"
         android:id="@+id/edit_button"
+        android:background="@drawable/round_button"
+        android:textColor="#fff"
+        android:fontFamily="@font/mainfont"
+        android:textSize="25sp"
+        android:alpha="0.8"
         />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/edit_button"
-        android:layout_marginTop="20dp"
-        android:text="Add Profile Photo"
+        android:layout_marginTop="10dp"
+        android:text="Edit Profile Photo"
         android:id="@+id/add_photo"
-
+        android:background="@drawable/round_button"
+        android:alpha="0.8"
+        android:textColor="#fff"
+        android:fontFamily="@font/mainfont"
+        android:textSize="25sp"
         />
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/add_photo"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="Logout"
         android:id="@+id/logout_button"
+        android:background="@drawable/round_button"
+        android:textColor="#fff"
+        android:fontFamily="@font/mainfont"
+        android:textSize="25sp"
+        android:alpha="0.8"
+
 
         />
 </RelativeLayout>

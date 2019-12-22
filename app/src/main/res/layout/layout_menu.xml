@@ -9,7 +9,6 @@
     app:cardCornerRadius="6dp"
     app:cardElevation="6dp"
     android:id="@+id/Menu_cards"
-
     >
 
     <LinearLayout
