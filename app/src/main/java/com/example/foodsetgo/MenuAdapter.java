@@ -3,10 +3,12 @@ package com.example.foodsetgo;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,9 +28,11 @@ import java.util.List;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
+
     private List<fooditem> listmenus;
     private Context context;
     private String uid;
+
     public MenuAdapter(List<fooditem> listmenus, Context context,String uid) {
         this.listmenus = listmenus;
         this.context = context;
@@ -41,6 +45,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.layout_menu,parent,false);
+
         return new ViewHolder(v);
     }
 
@@ -67,7 +72,20 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
             }
         });
+        holder.numberPicker.setMinValue(0);
+        holder.numberPicker.setMaxValue(20);
+        holder.numberPicker.setWrapSelectorWheel(true);
+        holder.numberPicker.setDescendantFocusability(holder.numberPicker.FOCUS_BLOCK_DESCENDANTS);
+        holder.numberPicker.setOnLongPressUpdateInterval(200);
+        holder.numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 
+                Log.e("numberp", "old value" + oldVal + "' " + "new val" + newVal + ", " + picker);
+
+
+            }
+        });
 
     }
 
@@ -81,11 +99,14 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         public TextView foodname;
         public ImageView imageView;
         public CardView cardView;
+        public NumberPicker numberPicker;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             foodname=itemView.findViewById(R.id.FoodName_menu);
             imageView=itemView.findViewById(R.id.FoodImage_menu);
             cardView=itemView.findViewById(R.id.Menu_cards);
+            numberPicker = itemView.findViewById(R.id.number_picker);
         }
     }
 

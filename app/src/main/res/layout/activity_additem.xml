@@ -12,7 +12,7 @@
         android:src="@drawable/main_image"
         android:scaleType="centerCrop"
         android:id="@+id/imageview"
-        android:alpha="0.4"
+        android:alpha="0.5"
 
         />
 
@@ -36,7 +36,7 @@
         android:drawablePadding="10dp"
         android:paddingLeft="10dp"
         android:textColorHint="#fff"
-
+        android:alpha="0.8"
         />
     <EditText
 
@@ -52,9 +52,10 @@
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:background="@drawable/edittext_round"
+        android:alpha="0.8"
 
         android:layout_centerHorizontal="true"
-        android:drawableLeft="@drawable/ic_attach_money_black_24dp"
+        android:drawableLeft="@drawable/rupee_icon"
         android:drawablePadding="10dp"
         android:paddingLeft="10dp"
         android:textColorHint="#fff"
@@ -72,6 +73,8 @@
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/mainfont"
         android:textSize="25sp"
+        android:alpha="0.8"
+
         />
 
     <Button
@@ -87,6 +90,8 @@
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/mainfont"
         android:textSize="25sp"
+        android:alpha="0.8"
+
         />
 
     <Spinner
@@ -101,6 +106,7 @@
         android:spinnerMode="dropdown"
         android:layout_centerHorizontal="true"
         android:backgroundTint="#000000"
+
         />
     <ImageView
         android:id="@+id/imgView"

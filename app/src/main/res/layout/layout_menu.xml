@@ -37,12 +37,18 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="160dp"
             android:layout_height="match_parent"
-            android:text="RestNme"
+            android:text="FoodName"
             android:textSize="30sp"
             android:id="@+id/FoodName_menu"
             android:layout_marginLeft="10dp"
+            />
+        <NumberPicker
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:id="@+id/number_picker"
+
             />
     </LinearLayout>
 
