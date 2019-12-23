@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 
 import com.example.foodsetgo.Owners.RestInfo;
 import com.google.firebase.database.DataSnapshot;
@@ -16,12 +17,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class restaurantMenu extends AppCompatActivity {
     private RecyclerView rv;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adap;
+    private HashMap<String,ArrayList<Pair<String,String>>> CART;
+
     String uid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +39,13 @@ public class restaurantMenu extends AppCompatActivity {
 
         layoutManager = new LinearLayoutManager(restaurantMenu.this);
         rv.setLayoutManager(layoutManager);
+        GlobalCart gc = (GlobalCart)restaurantMenu.this.getApplicationContext();
+        List<Pair<String,String>> cart = gc.getCART();
+        cart.clear();
+        gc.setCART(cart);
+
+
         final List<fooditem> listmenu= new ArrayList<>();
-
-
 
         DatabaseReference root= FirebaseDatabase.getInstance().getReference();
         root.child("Restaurants").child(uid).child("menu").addValueEventListener(new ValueEventListener() {
@@ -61,4 +70,14 @@ public class restaurantMenu extends AppCompatActivity {
             }
         });
     }
+
+    public HashMap<String, ArrayList<Pair<String, String>>> getCART() {
+        return CART;
+    }
+
+    public void setCART(HashMap<String, ArrayList<Pair<String, String>>> CART) {
+        this.CART = CART;
+    }
+
+
 }

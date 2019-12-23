@@ -2,9 +2,12 @@ package com.example.foodsetgo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,6 +27,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
@@ -32,7 +37,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     private List<fooditem> listmenus;
     private Context context;
     private String uid;
-
     public MenuAdapter(List<fooditem> listmenus, Context context,String uid) {
         this.listmenus = listmenus;
         this.context = context;
@@ -54,7 +58,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         final fooditem listmenu=listmenus.get(position);
         holder.foodname.setText(listmenu.getName());
         FirebaseStorage storage=FirebaseStorage.getInstance();
-
 
         StorageReference storageRef=storage.getReferenceFromUrl("gs://foodsetgo-120b6.appspot.com");
         storageRef.child("images/"+uid+'/'+listmenu.getName()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -82,6 +85,49 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 
                 Log.e("numberp", "old value" + oldVal + "' " + "new val" + newVal + ", " + picker);
+                List<Pair<String,String>> cart = ((GlobalCart)context.getApplicationContext()).getCART();
+
+
+                        if(newVal==0)
+                        {
+                            for(int i = 0;i<cart.size();i++)
+                            {
+                                if(cart.get(i).first==listmenu.getName())
+                                {
+                                    cart.remove(cart.get(i));
+                                    break;
+                                }
+                            }
+                            ((GlobalCart)context.getApplicationContext()).setCART(cart);
+                        }
+                        else
+                        {
+                            int j=-1;
+                            for(int i = 0;i<cart.size();i++)
+                            {
+                                if(cart.get(i).first==listmenu.getName())
+                                {
+                                    j=i;
+                                    break;
+                                }
+                            }
+                            if(j==-1)
+                            {
+                                Pair<String,String> food = Pair.create(listmenu.getName(),Integer.toString(newVal));
+                                cart.add(food);
+
+                            }
+                            else
+                            {
+                                Pair<String,String> food = Pair.create(listmenu.getName(),Integer.toString(newVal));
+                                cart.remove(cart.get(j));
+                                cart.add(food);
+                            }
+                            ((GlobalCart)context.getApplicationContext()).setCART(cart);
+                        }
+
+
+
 
 
             }

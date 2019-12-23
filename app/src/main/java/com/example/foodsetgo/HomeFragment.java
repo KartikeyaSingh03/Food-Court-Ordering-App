@@ -2,6 +2,7 @@ package com.example.foodsetgo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -37,14 +39,11 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewroot=inflater.inflate(R.layout.fragment_home,container,false);
-
         rv=viewroot.findViewById(R.id.recycler_view);
         rv.setHasFixedSize(true);
-
         layoutManager = new LinearLayoutManager(getContext());
         rv.setLayoutManager(layoutManager);
         final List<RestInfo> listRests= new ArrayList<>();
-
 
 
         DatabaseReference root= FirebaseDatabase.getInstance().getReference();
