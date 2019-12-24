@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class YourOrdersFragment extends Fragment {
+public class TimelineUser extends Fragment {
     RecyclerView recyclerView;
     RecyclerView.Adapter adap;
     RecyclerView.LayoutManager layoutManager;

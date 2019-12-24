@@ -35,7 +35,7 @@ public class UserHome extends AppCompatActivity {
                     selctedFrag = new HomeFragment();
                     break;
                 case R.id.nav_cart:
-                    selctedFrag = new YourOrdersFragment();
+                    selctedFrag = new TimelineUser();
                     break;
                 case R.id.nav_profile:
                     selctedFrag = new ProfileFragment();

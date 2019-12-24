@@ -56,6 +56,7 @@ public class restaurantMenu extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()==true)
                 {
+
                     for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
                     {
                         fooditem f=dataSnapshot1.getValue(fooditem.class);

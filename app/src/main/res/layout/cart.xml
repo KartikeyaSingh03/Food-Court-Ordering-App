@@ -14,18 +14,34 @@
         android:id="@+id/rview_cart"
         />
     <TextView
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:background="@drawable/edittext_round"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/rview_cart"
+        android:id="@+id/grandtotal"
+        android:alpha="0.8"
+        android:textColor="#fff"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:layout_marginTop="5dp"
+        />
+
+    <Button
         android:layout_width="320dp"
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/edittext_round"
+        android:background="#08A912"
         android:alpha="0.8"
         android:paddingLeft="10dp"
-        android:textSize="25sp"
+        android:textSize="20sp"
         android:textAlignment="center"
         android:textColor="#fff"
-        android:id="@+id/grandtotal"
+        android:text="Place Order"
+        android:id="@+id/placeOrder"
+
         />
 
 

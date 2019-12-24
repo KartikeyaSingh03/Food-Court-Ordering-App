@@ -24,6 +24,7 @@
         <activity android:name=".SignUp1" />
         <activity android:name=".UserProfile" />
         <activity android:name=".login" />
+        <activity android:name=".TimelineUser" />
         <activity android:name=".signup" />
         <activity android:name=".Owners.additem" />
         <activity android:name=".Owners.OwnerMain" />
