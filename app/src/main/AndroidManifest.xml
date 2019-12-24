@@ -29,6 +29,7 @@
         <activity android:name=".Owners.OwnerMain" />
         <activity android:name=".Owners.RegistrationRestaurant" />
         <activity android:name=".Owners.RegistrationRestaurant1" />
+        <activity android:name=".Cart" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

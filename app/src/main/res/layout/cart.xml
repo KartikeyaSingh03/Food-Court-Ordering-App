@@ -4,18 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment_cart"
+    tools:context=".cart"
     android:background="#f4f8dc"
-
     >
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/rview_for_cart"
+        android:id="@+id/rview_cart"
         />
-
-
 
 
 </RelativeLayout>

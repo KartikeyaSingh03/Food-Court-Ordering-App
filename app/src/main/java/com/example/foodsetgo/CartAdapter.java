@@ -19,6 +19,11 @@ import com.example.foodsetgo.Owners.RestInfo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -27,11 +32,13 @@ import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
-    private List<Pair<fooditem,Pair<String,String>>> listfoods;
+    private List<Pair<String,String>> listfoods;
     private Context context;
-    public CartAdapter(List<Pair<fooditem,Pair<String,String>>> listfoods, Context context) {
+    private String uid;
+    public CartAdapter(List<Pair<String,String>> listfoods, Context context,String uid) {
         this.listfoods = listfoods;
         this.context = context;
+        this.uid = uid;
     }
 
 
@@ -46,12 +53,43 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        final fooditem listfood=listfoods.get(position).first;
-        holder.FoodName.setText(listfood.getName());
-        holder.count.setText(listfoods.get(position).second.second);
+        final Pair<String,String> foodpair = listfoods.get(position);
+
+        DatabaseReference root = FirebaseDatabase.getInstance().getReference();
+        root = root.child("Restaurants");
+
+        holder.FoodName.setText(foodpair.first);
+        holder.count.setText(foodpair.second);
+
+
+        root.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    dataSnapshot = dataSnapshot.child(uid).child("menu");
+                    if(dataSnapshot.exists())
+                    {
+                        if(dataSnapshot.child(foodpair.first).exists())
+                        {
+                            final fooditem food;
+                            food = dataSnapshot.child(foodpair.first).getValue(fooditem.class);
+
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
         FirebaseStorage storage=FirebaseStorage.getInstance();
         StorageReference storageRef=storage.getReferenceFromUrl("gs://foodsetgo-120b6.appspot.com");
-        storageRef.child("images/"+listfoods.get(position).second.first+'/'+listfood.getName()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageRef.child("images/"+uid+'/'+foodpair.first).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 // Got the download URL for 'users/me/profile.png'

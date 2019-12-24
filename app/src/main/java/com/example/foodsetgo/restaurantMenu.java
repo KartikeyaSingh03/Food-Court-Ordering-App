@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.foodsetgo.Owners.RestInfo;
 import com.google.firebase.database.DataSnapshot;
@@ -26,12 +28,13 @@ public class restaurantMenu extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adap;
     private HashMap<String,ArrayList<Pair<String,String>>> CART;
-
+    private Button viewcart;
     String uid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant_menu);
+        viewcart = findViewById(R.id.view_cart);
         Bundle bundle =getIntent().getExtras();
         uid=bundle.getString("UID");
         rv=findViewById(R.id.rview_menu);
@@ -40,7 +43,7 @@ public class restaurantMenu extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(restaurantMenu.this);
         rv.setLayoutManager(layoutManager);
         GlobalCart gc = (GlobalCart)restaurantMenu.this.getApplicationContext();
-        List<Pair<String,String>> cart = gc.getCART();
+        final List<Pair<String,String>> cart = gc.getCART();
         cart.clear();
         gc.setCART(cart);
 
@@ -67,6 +70,15 @@ public class restaurantMenu extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+        viewcart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i =new Intent(restaurantMenu.this,Cart.class);
+                i.putExtra("UID",uid);
+                startActivity(i);
             }
         });
     }
