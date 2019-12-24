@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.foodsetgo.Owners.EditFoodItem;
 import com.example.foodsetgo.Owners.foodadapter;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -75,61 +76,49 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
             }
         });
-        holder.numberPicker.setMinValue(0);
-        holder.numberPicker.setMaxValue(20);
-        holder.numberPicker.setWrapSelectorWheel(true);
-        holder.numberPicker.setDescendantFocusability(holder.numberPicker.FOCUS_BLOCK_DESCENDANTS);
-        holder.numberPicker.setOnLongPressUpdateInterval(200);
-        holder.numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        holder.numberPicker.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
             @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-
-                Log.e("numberp", "old value" + oldVal + "' " + "new val" + newVal + ", " + picker);
+            public void onValueChange(ElegantNumberButton view, int oldVal, int newVal) {
                 List<Pair<String,String>> cart = ((GlobalCart)context.getApplicationContext()).getCART();
 
 
-                        if(newVal==0)
+                if(newVal==0)
+                {
+                    for(int i = 0;i<cart.size();i++)
+                    {
+                        if(cart.get(i).first==listmenu.getName())
                         {
-                            for(int i = 0;i<cart.size();i++)
-                            {
-                                if(cart.get(i).first==listmenu.getName())
-                                {
-                                    cart.remove(cart.get(i));
-                                    break;
-                                }
-                            }
-                            ((GlobalCart)context.getApplicationContext()).setCART(cart);
+                            cart.remove(cart.get(i));
+                            break;
                         }
-                        else
+                    }
+                    ((GlobalCart)context.getApplicationContext()).setCART(cart);
+                }
+                else
+                {
+                    int j=-1;
+                    for(int i = 0;i<cart.size();i++)
+                    {
+                        if(cart.get(i).first==listmenu.getName())
                         {
-                            int j=-1;
-                            for(int i = 0;i<cart.size();i++)
-                            {
-                                if(cart.get(i).first==listmenu.getName())
-                                {
-                                    j=i;
-                                    break;
-                                }
-                            }
-                            if(j==-1)
-                            {
-                                Pair<String,String> food = Pair.create(listmenu.getName(),Integer.toString(newVal));
-                                cart.add(food);
-
-                            }
-                            else
-                            {
-                                Pair<String,String> food = Pair.create(listmenu.getName(),Integer.toString(newVal));
-                                cart.remove(cart.get(j));
-                                cart.add(food);
-                            }
-                            ((GlobalCart)context.getApplicationContext()).setCART(cart);
+                            j=i;
+                            break;
                         }
+                    }
+                    if(j==-1)
+                    {
+                        Pair<String,String> food = Pair.create(listmenu.getName(),Integer.toString(newVal));
+                        cart.add(food);
 
-
-
-
-
+                    }
+                    else
+                    {
+                        Pair<String,String> food = Pair.create(listmenu.getName(),Integer.toString(newVal));
+                        cart.remove(cart.get(j));
+                        cart.add(food);
+                    }
+                    ((GlobalCart)context.getApplicationContext()).setCART(cart);
+                }
             }
         });
 
@@ -145,7 +134,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         public TextView foodname;
         public ImageView imageView;
         public CardView cardView;
-        public NumberPicker numberPicker;
+        public ElegantNumberButton numberPicker;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

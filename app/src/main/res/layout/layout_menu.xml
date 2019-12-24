@@ -36,20 +36,35 @@
                 />
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:layout_width="160dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="FoodName"
-            android:textSize="30sp"
-            android:id="@+id/FoodName_menu"
-            android:layout_marginLeft="10dp"
-            />
-        <NumberPicker
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:id="@+id/number_picker"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="FoodName"
+                android:textSize="30sp"
+                android:id="@+id/FoodName_menu"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                />
 
-            />
+            <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:id="@+id/number_picker" android:alpha="0.8"
+                app:textColor="#fff"
+                app:textSize="15dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="120dp"
+                android:layout_marginTop="10dp"
+                app:initialNumber="0"
+                app:finalNumber="9"
+                />
+
+        </LinearLayout>
     </LinearLayout>
 
 
