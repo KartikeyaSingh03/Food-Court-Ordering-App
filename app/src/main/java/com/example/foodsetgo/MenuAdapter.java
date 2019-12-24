@@ -24,6 +24,11 @@ import com.example.foodsetgo.Owners.foodadapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -78,15 +83,15 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         });
         holder.numberPicker.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
             @Override
-            public void onValueChange(ElegantNumberButton view, int oldVal, int newVal) {
-                List<Pair<String,String>> cart = ((GlobalCart)context.getApplicationContext()).getCART();
+            public void onValueChange(ElegantNumberButton view,final int oldVal,final int newVal) {
+                final List<Pair<fooditem,String>> cart = ((GlobalCart)context.getApplicationContext()).getCART();
 
 
                 if(newVal==0)
                 {
                     for(int i = 0;i<cart.size();i++)
                     {
-                        if(cart.get(i).first==listmenu.getName())
+                        if(cart.get(i).first.getName()==listmenu.getName())
                         {
                             cart.remove(cart.get(i));
                             break;
@@ -96,28 +101,48 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
                 }
                 else
                 {
-                    int j=-1;
-                    for(int i = 0;i<cart.size();i++)
-                    {
-                        if(cart.get(i).first==listmenu.getName())
-                        {
-                            j=i;
-                            break;
-                        }
-                    }
-                    if(j==-1)
-                    {
-                        Pair<String,String> food = Pair.create(listmenu.getName(),Integer.toString(newVal));
-                        cart.add(food);
+                    DatabaseReference root = FirebaseDatabase.getInstance().getReference();
+                    root = root.child("Restaurants").child(uid).child("menu");
 
-                    }
-                    else
-                    {
-                        Pair<String,String> food = Pair.create(listmenu.getName(),Integer.toString(newVal));
-                        cart.remove(cart.get(j));
-                        cart.add(food);
-                    }
-                    ((GlobalCart)context.getApplicationContext()).setCART(cart);
+                    root.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            dataSnapshot = dataSnapshot.child(listmenu.getName());
+                            final fooditem temp = dataSnapshot.getValue(fooditem.class);
+                            int j=-1;
+                            for(int i = 0;i<cart.size();i++)
+                            {
+                                if(cart.get(i).first.getName()==listmenu.getName())
+                                {
+                                    j=i;
+                                    break;
+                                }
+                            }
+                            if(j==-1)
+                            {
+                                Pair<fooditem,String> food = Pair.create(temp,Integer.toString(newVal));
+                                cart.add(food);
+
+                            }
+                            else
+                            {
+                                Pair<fooditem,String> food = Pair.create(temp,Integer.toString(newVal));
+                                cart.remove(cart.get(j));
+                                cart.add(food);
+                            }
+                            ((GlobalCart)context.getApplicationContext()).setCART(cart);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+
+
+
                 }
             }
         });

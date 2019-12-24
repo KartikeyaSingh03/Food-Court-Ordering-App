@@ -43,7 +43,7 @@ public class restaurantMenu extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(restaurantMenu.this);
         rv.setLayoutManager(layoutManager);
         GlobalCart gc = (GlobalCart)restaurantMenu.this.getApplicationContext();
-        final List<Pair<String,String>> cart = gc.getCART();
+        final List<Pair<fooditem,String>> cart = gc.getCART();
         cart.clear();
         gc.setCART(cart);
 
