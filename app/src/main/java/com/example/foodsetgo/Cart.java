@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,6 +39,7 @@ public class Cart extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     TextView tv;
     int GrandTotal = 0;
+    String UserUid;
     AlertDialog.Builder builder;
     Button placeorder;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -50,7 +53,7 @@ public class Cart extends AppCompatActivity {
         placeorder = findViewById(R.id.placeOrder);
         Bundle bundle = getIntent().getExtras();
         final String uid = bundle.getString("UID");
-
+        GoogleSignInAccount acct =  GoogleSignIn.getLastSignedInAccount(Cart.this);
 
         recyclerView = findViewById(R.id.rview_cart);
         recyclerView.setHasFixedSize(true);
@@ -92,8 +95,11 @@ public class Cart extends AppCompatActivity {
             }
         });
 
+        if(firebaseAuth.getCurrentUser()!=null)
+            UserUid = firebaseAuth.getCurrentUser().getUid();
+        if(acct!=null)
+            UserUid= acct.getId();
 
-        String UserUid = firebaseAuth.getCurrentUser().getUid();
         final DatabaseReference root = FirebaseDatabase.getInstance().getReference().child("Users/"+UserUid);
 
         root.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -2,11 +2,16 @@ package com.example.foodsetgo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,11 +38,13 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     private RecyclerView rv;
     private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView.Adapter adap;
+    private RestaurantListAdapter adap;
     private View viewroot;
+    private static final String TAG="HOmeFragment";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        this.setHasOptionsMenu(true);
         viewroot=inflater.inflate(R.layout.fragment_home,container,false);
         rv=viewroot.findViewById(R.id.recycler_view);
         rv.setHasFixedSize(true);
@@ -69,5 +76,26 @@ public class HomeFragment extends Fragment {
             }
         });
         return viewroot;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        inflater.inflate(R.menu.search_bar_rest,menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView)searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adap.getFilter().filter(s);
+                return false;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }

@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,16 +24,19 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAdapter.ViewHolder> {
+public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAdapter.ViewHolder> implements Filterable {
 
     private List<RestInfo> listRests;
+    private List<RestInfo> ListRestsCopy;
     private Context context;
     String uid;
     public RestaurantListAdapter(List<RestInfo> listRests, Context context) {
         this.listRests = listRests;
         this.context = context;
+        ListRestsCopy= new ArrayList<>(listRests);
     }
 
 
@@ -100,4 +105,37 @@ public class RestaurantListAdapter extends RecyclerView.Adapter<RestaurantListAd
             card=itemView.findViewById(R.id.Rest_cards);
         }
     }
+
+    public Filter getFilter(){
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            List<RestInfo> filteredList = new ArrayList<>();
+            if(charSequence==null||charSequence.length()==0){
+                filteredList.addAll(ListRestsCopy);
+            }
+            else{
+                String filterPattern= charSequence.toString().toLowerCase().trim();
+
+                for(RestInfo info : ListRestsCopy){
+                    if(info.getName().toLowerCase().contains(filterPattern)){
+                        filteredList.add(info);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values=filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            listRests.clear();
+            listRests.addAll((List)filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
 }
