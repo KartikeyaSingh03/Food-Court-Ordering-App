@@ -2,14 +2,20 @@ package com.example.foodsetgo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SearchView;
 
 import com.example.foodsetgo.Owners.RestInfo;
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +32,7 @@ import java.util.Map;
 public class restaurantMenu extends AppCompatActivity {
     private RecyclerView rv;
     private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView.Adapter adap;
+    private MenuAdapter adap;
     private HashMap<String,ArrayList<Pair<String,String>>> CART;
     private Button viewcart;
     String uid;
@@ -39,25 +45,24 @@ public class restaurantMenu extends AppCompatActivity {
         uid=bundle.getString("UID");
         rv=findViewById(R.id.rview_menu);
         rv.setHasFixedSize(true);
-
         layoutManager = new LinearLayoutManager(restaurantMenu.this);
         rv.setLayoutManager(layoutManager);
         GlobalCart gc = (GlobalCart)restaurantMenu.this.getApplicationContext();
         final List<Pair<fooditem,String>> cart = gc.getCART();
         cart.clear();
         gc.setCART(cart);
-
-
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         final List<fooditem> listmenu= new ArrayList<>();
 
         DatabaseReference root= FirebaseDatabase.getInstance().getReference();
-        root.child("Restaurants").child(uid).child("menu").addValueEventListener(new ValueEventListener() {
+        root.child("Restaurants").child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()==true)
                 {
-
-                    for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
+                    getSupportActionBar().setWindowTitle(dataSnapshot.child("name").getValue().toString().trim());
+                    for(DataSnapshot dataSnapshot1:dataSnapshot.child("menu").getChildren())
                     {
                         fooditem f=dataSnapshot1.getValue(fooditem.class);
                         listmenu.add(f);
@@ -92,5 +97,24 @@ public class restaurantMenu extends AppCompatActivity {
         this.CART = CART;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_bar_rest,menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adap.getFilter().filter(s);
+                return false;
+            }
+        });
+        return true;
+    }
 }

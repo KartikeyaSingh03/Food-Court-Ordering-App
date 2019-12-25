@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.foodsetgo.Owners.EditFoodItem;
+import com.example.foodsetgo.Owners.RestInfo;
 import com.example.foodsetgo.Owners.foodadapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,12 +43,14 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
 
 
     private List<fooditem> listmenus;
+    private List<fooditem> listmenusCopy;
     private Context context;
     private String uid;
     public MenuAdapter(List<fooditem> listmenus, Context context,String uid) {
         this.listmenus = listmenus;
         this.context = context;
         this.uid=uid;
+        listmenusCopy = new ArrayList<>(listmenus);
     }
 
 
@@ -169,6 +173,38 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
             numberPicker = itemView.findViewById(R.id.number_picker);
         }
     }
+
+    public Filter getFilter(){
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            List<fooditem> filteredList = new ArrayList<>();
+            if(charSequence==null||charSequence.length()==0){
+                filteredList.addAll(listmenusCopy);
+            }
+            else{
+                String filterPattern= charSequence.toString().toLowerCase().trim();
+                for(fooditem item : listmenusCopy){
+                    if(item.getName().toLowerCase().contains(filterPattern)){
+                        filteredList.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values=filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            listmenus.clear();
+            listmenus.addAll((List)filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
 
 
 }

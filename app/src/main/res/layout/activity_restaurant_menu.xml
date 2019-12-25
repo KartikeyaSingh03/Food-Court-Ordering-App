@@ -7,12 +7,19 @@
     tools:context=".activity_restaurant_menu"
     android:background="#f4f8dc"
     >
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:layout_scrollFlags="scroll|enterAlways"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/rview_menu"
         android:layout_marginBottom="60dp"
+        android:layout_below="@id/toolbar"
         />
     <Button
         android:layout_width="300dp"
