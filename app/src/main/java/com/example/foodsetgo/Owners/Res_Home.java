@@ -36,6 +36,9 @@ public class Res_Home extends AppCompatActivity {
                         case R.id.owners_profile:
                         selectedFragment=new OwnersProfileFragment();
                         break;
+                        case R.id.owner_orders:
+                        selectedFragment = new Owners_Orders_fragment();
+                        break;
 
 
 

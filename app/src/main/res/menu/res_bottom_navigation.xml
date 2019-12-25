@@ -9,4 +9,9 @@
         android:id="@+id/owners_profile"
         android:icon="@drawable/ic_account_circle_black_24dp"
         android:title="Profile"/>
+    <item
+        android:id="@+id/owner_orders"
+        android:icon="@drawable/ic_work_black_24dp"
+        android:title="Orders"
+        />
 </menu>

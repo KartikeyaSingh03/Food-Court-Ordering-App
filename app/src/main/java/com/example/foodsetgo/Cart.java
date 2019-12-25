@@ -129,6 +129,38 @@ public class Cart extends AppCompatActivity {
 
                     }
                 });
+
+                final DatabaseReference root2 = FirebaseDatabase.getInstance().getReference().child("Restaurants/"+uid);
+
+                root2.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.child("orders").exists())
+                        {
+                            dataSnapshot = dataSnapshot.child("orders");
+                            int size = (int)dataSnapshot.getChildrenCount();
+                            size++;
+                            root2.child("orders").child(Integer.toString(size)).child("OrderTray").setValue(cart);
+                            root2.child("orders").child(Integer.toString(size)).child("CustUid").setValue(UserUid);
+
+                        }
+                        else {
+                            root2.child("orders").child(Integer.toString(1)).child("OrderTray").setValue(cart);
+                            root2.child("orders").child(Integer.toString(1)).child("CustUid").setValue(UserUid);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
+
             }
         });
 
