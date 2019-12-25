@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,6 +98,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+            Intent i = new Intent(context,OrderList.class);
+            i.putExtra("UID",Restinfo.getUid());
+            i.putExtra("OrderNumber",Restinfo.getOrderNumber());
+
+            context.startActivity(i);
 
             }
 

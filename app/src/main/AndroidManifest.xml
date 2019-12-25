@@ -5,13 +5,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.example.foodsetgo.GlobalCart"
+        android:name=".GlobalCart"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".OrderList"></activity>
         <activity android:name=".Owners.EditFoodItem" />
         <activity android:name=".Owners.EditDetailsOwner" />
         <activity android:name=".Owners.AddProfilePhoto" />
