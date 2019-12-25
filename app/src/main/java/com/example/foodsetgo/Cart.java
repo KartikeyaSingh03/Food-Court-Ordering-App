@@ -53,7 +53,7 @@ public class Cart extends AppCompatActivity {
         placeorder = findViewById(R.id.placeOrder);
         Bundle bundle = getIntent().getExtras();
         final String uid = bundle.getString("UID");
-        GoogleSignInAccount acct =  GoogleSignIn.getLastSignedInAccount(Cart.this);
+        final GoogleSignInAccount acct =  GoogleSignIn.getLastSignedInAccount(Cart.this);
 
         recyclerView = findViewById(R.id.rview_cart);
         recyclerView.setHasFixedSize(true);
@@ -91,37 +91,47 @@ public class Cart extends AppCompatActivity {
                     }
                 },1000);
 
+                if(firebaseAuth.getCurrentUser()!=null)
+                    UserUid = firebaseAuth.getCurrentUser().getUid();
+                if(acct!=null)
+                    UserUid= acct.getId();
 
+                final DatabaseReference root = FirebaseDatabase.getInstance().getReference().child("Users/"+UserUid);
+
+                root.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if(dataSnapshot.child("orders").exists())
+                        {
+                            dataSnapshot = dataSnapshot.child("orders");
+                            int size = (int)dataSnapshot.getChildrenCount();
+                            size++;
+                            root.child("orders").child(Integer.toString(size)).child("OrderTray").setValue(cart);
+                            root.child("orders").child(Integer.toString(size)).child("Status").setValue("Processing...");
+                            root.child("orders").child(Integer.toString(size)).child("UID").setValue(uid);
+                            root.child("orders").child(Integer.toString(size)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
+
+
+                        }
+                        else
+                        {
+                            root.child("orders").child(Integer.toString(1)).child("OrderTray").setValue(cart);
+                            root.child("orders").child(Integer.toString(1)).child("Status").setValue("Processing...");
+                            root.child("orders").child(Integer.toString(1)).child("UID").setValue(uid);
+                            root.child("orders").child(Integer.toString(1)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
 
-        if(firebaseAuth.getCurrentUser()!=null)
-            UserUid = firebaseAuth.getCurrentUser().getUid();
-        if(acct!=null)
-            UserUid= acct.getId();
 
-        final DatabaseReference root = FirebaseDatabase.getInstance().getReference().child("Users/"+UserUid);
-
-        root.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child("orders").exists())
-                {
-                    dataSnapshot = dataSnapshot.child("orders");
-                    int size = (int)dataSnapshot.getChildrenCount();
-                    size++;
-                    root.child("orders").child(Integer.toString(size)).setValue(cart);
-                }
-                else
-                {
-                    root.child("orders").child(Integer.toString(1)).setValue(cart);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 }
