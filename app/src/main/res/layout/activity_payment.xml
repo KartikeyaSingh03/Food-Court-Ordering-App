@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/g_pay_btn"
-        android:text="Pay Using cash"
+        android:text="Cash On Delivery"
         />
 
 </RelativeLayout>

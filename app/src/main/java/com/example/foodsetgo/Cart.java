@@ -142,11 +142,14 @@ public class Cart extends AppCompatActivity {
                             size++;
                             root2.child("orders").child(Integer.toString(size)).child("OrderTray").setValue(cart);
                             root2.child("orders").child(Integer.toString(size)).child("CustUid").setValue(UserUid);
-
+                            root2.child("orders").child(Integer.toString(size)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
+                            root2.child("orders").child(Integer.toString(size)).child("Status").setValue("Processing...");
                         }
                         else {
                             root2.child("orders").child(Integer.toString(1)).child("OrderTray").setValue(cart);
                             root2.child("orders").child(Integer.toString(1)).child("CustUid").setValue(UserUid);
+                            root2.child("orders").child(Integer.toString(1)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
+                            root2.child("orders").child(Integer.toString(1)).child("Status").setValue("Processing...");
                         }
                     }
 
