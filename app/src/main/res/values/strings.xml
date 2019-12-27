@@ -10,4 +10,7 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_owners_home">OwnersHome</string>
     <string name="title_activity_edit_food_item">EditFoodItem</string>
+    <string name="googlepay_button_content_description">Google Pay</string>
+    <string name="googlepay_status_checking" translatable="false">Checking if Google Pay is available...</string>
+    <string name="buy_with_googlepay_button_content_description">Buy with Google Pay</string>
 </resources>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Payment"
+    android:layout_margin="8dp">
+
+
+    <TextView
+        android:id="@+id/head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="Payments"
+        android:layout_marginBottom="16dp"/>
+    <TextView
+        android:id="@+id/amount"
+        android:layout_below="@id/head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text=""
+        android:layout_marginBottom="16dp"/>
+
+    <ImageButton
+        android:layout_below="@id/amount"
+        android:id="@+id/g_pay_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/googlepay_button_content"
+        android:background="@drawable/googlepay_button_no_shadow_background"/>
+
+    <Button
+        android:id="@+id/cash_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/g_pay_btn"
+        android:text="Pay Using cash"
+        />
+
+</RelativeLayout>
