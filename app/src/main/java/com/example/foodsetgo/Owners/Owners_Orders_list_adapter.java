@@ -55,7 +55,7 @@ public class Owners_Orders_list_adapter extends  RecyclerView.Adapter<Owners_Ord
 
     @Override
     public void onBindViewHolder(@NonNull final Owners_Orders_list_adapter.ViewHolder holder, int position) {
-        Pair<String,String> User = listUser.get(position);
+        final Pair<String,String> User = listUser.get(position);
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
 
         root = root.child("Users").child(User.first);
@@ -89,6 +89,15 @@ public class Owners_Orders_list_adapter extends  RecyclerView.Adapter<Owners_Ord
             }
         });
 
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),OrderDetails.class);
+                intent.putExtra("UID",User.first);
+                intent.putExtra("OrderNo",User.second);
+                view.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override
