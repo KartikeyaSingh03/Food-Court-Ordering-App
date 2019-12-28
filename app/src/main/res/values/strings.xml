@@ -4,6 +4,12 @@
         <item>VEG</item>
         <item>NON VEG</item>
     </string-array>
+    <string-array name="Order_status">
+        <item>Processing...</item>
+        <item>On the way</item>
+        <item>Delivered</item>
+
+    </string-array>
     <string name="title_activity_user_side">UserSide</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>

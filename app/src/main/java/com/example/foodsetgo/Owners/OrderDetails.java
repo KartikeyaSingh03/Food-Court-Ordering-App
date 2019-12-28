@@ -4,6 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.foodsetgo.R;
@@ -20,6 +24,8 @@ public class OrderDetails extends AppCompatActivity {
     String UserID,OrderNo;
     String address,contact,price,status,RestId;
     FirebaseDatabase database;
+    Spinner spinner;
+    Button update_status;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,10 +36,20 @@ public class OrderDetails extends AppCompatActivity {
         Add= findViewById(R.id.Address);
         Cont =findViewById(R.id.Contact);
         Price=findViewById(R.id.Total);
-        Status=findViewById(R.id.Status);
+        spinner=findViewById(R.id.status_spinner);
+        update_status = findViewById(R.id.update_status);
         RestId=FirebaseAuth.getInstance().getCurrentUser().getUid();
         database=FirebaseDatabase.getInstance();
-        DatabaseReference root = database.getReference();
+
+        ArrayAdapter<String> adapter =new ArrayAdapter<String>(OrderDetails.this,android.R.layout.simple_list_item_1,
+                getResources().getStringArray(R.array.Order_status));
+
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+
+        final DatabaseReference root = database.getReference();
         root.child("Users").child(UserID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -54,12 +70,32 @@ public class OrderDetails extends AppCompatActivity {
                 price=dataSnapshot.child("GrandTotal").getValue().toString();
                 status=dataSnapshot.child("Status").getValue().toString();
                 Price.setText("Price: "+price);
-                Status.setText("Status: "+status);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+        update_status.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String status = spinner.getSelectedItem().toString();
+
+                root.child("Users").child(UserID).child("orders").child(OrderNo).child("Status").setValue(status);
+                root.child("Users").child(UserID).child("orders").child(OrderNo).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String OrderNumRest = dataSnapshot.child("OrderNumRest").getValue(String.class);
+                        root.child("Restaurants").child(RestId).child("orders").child(OrderNumRest).child("Status").setValue(status);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
     }
