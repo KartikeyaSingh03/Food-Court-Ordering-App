@@ -145,9 +145,9 @@ public class ProfileFragment extends Fragment {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     FirebaseAuth.getInstance().signOut();
                     SharedPreferencesApp.setSessionState(getContext(),"NULL");
-                    getActivity().finish();
                     Intent in = new Intent(getContext(),CustomerMain.class);
                     startActivity(in);
+                    getActivity().finish();
                     Toast.makeText(getContext(),"Logged out Successfully",Toast.LENGTH_LONG).show();
                 }
             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
