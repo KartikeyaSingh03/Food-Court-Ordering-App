@@ -23,13 +23,19 @@
         android:layout_height="wrap_content"
         android:textColor="#000"
         android:textSize="24sp"/>
-    <TextView
-        android:layout_marginBottom="16dp"
-        android:id="@+id/Status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#000"
-        android:textSize="24sp"/>
+    <Spinner
+        android:id="@+id/status_spinner"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:contextClickable="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:spinnerMode="dropdown"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="#000000"
+
+        />
     <TextView
         android:layout_marginBottom="16dp"
         android:id="@+id/Total"
@@ -37,5 +43,11 @@
         android:layout_height="wrap_content"
         android:textColor="#000"
         android:textSize="24sp"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/update_status"
+        android:text="Update Status"
+        />
 
 </LinearLayout>

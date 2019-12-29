@@ -97,7 +97,6 @@ public class Cart extends AppCompatActivity {
                     UserUid= acct.getId();
 
                 final DatabaseReference root = FirebaseDatabase.getInstance().getReference().child("Users/"+UserUid);
-
                 root.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -105,12 +104,26 @@ public class Cart extends AppCompatActivity {
                         if(dataSnapshot.child("orders").exists())
                         {
                             dataSnapshot = dataSnapshot.child("orders");
-                            int size = (int)dataSnapshot.getChildrenCount();
-                            size++;
+                            final int size = (int)dataSnapshot.getChildrenCount()+1;
                             root.child("orders").child(Integer.toString(size)).child("OrderTray").setValue(cart);
                             root.child("orders").child(Integer.toString(size)).child("Status").setValue("Processing...");
                             root.child("orders").child(Integer.toString(size)).child("UID").setValue(uid);
                             root.child("orders").child(Integer.toString(size)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
+                            DatabaseReference r = FirebaseDatabase.getInstance().getReference().child("Restaurants").child(uid).child("orders");
+                            r.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot d) {
+                                    final int rsize = (int)d.getChildrenCount()+1;
+                                    root.child("orders").child(Integer.toString(size)).child("OrderNumRest").setValue(Integer.toString(rsize));
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
 
 
                         }
@@ -120,6 +133,20 @@ public class Cart extends AppCompatActivity {
                             root.child("orders").child(Integer.toString(1)).child("Status").setValue("Processing...");
                             root.child("orders").child(Integer.toString(1)).child("UID").setValue(uid);
                             root.child("orders").child(Integer.toString(1)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
+                            DatabaseReference r = FirebaseDatabase.getInstance().getReference().child("Restaurants").child(uid).child("orders");
+                            r.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot d) {
+                                    final int rsize = (int)d.getChildrenCount()+1;
+                                    root.child("orders").child(Integer.toString(1)).child("OrderNumRest").setValue(Integer.toString(rsize));
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
 
                         }
                     }
