@@ -146,6 +146,9 @@ public class ProfileFragment extends Fragment {
                     FirebaseAuth.getInstance().signOut();
                     SharedPreferencesApp.setSessionState(getContext(),"NULL");
                     Intent in = new Intent(getContext(),CustomerMain.class);
+                    in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                            Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(in);
                     getActivity().finish();
                     Toast.makeText(getContext(),"Logged out Successfully",Toast.LENGTH_LONG).show();
