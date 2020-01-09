@@ -34,6 +34,7 @@ import java.security.MessageDigest;
 
 public class login extends AppCompatActivity {
     int RC_SIGN_IN=0;
+    private static final String TAG="LoginActivity";
     EditText username;
     EditText password;
     Button   Login;
@@ -110,20 +111,8 @@ public class login extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            //pushing user data to firebase.
-            final String personName=account.getDisplayName().trim();
-            final String personEmail=account.getEmail().trim();
-            final String personContact="".trim();
-            final String personAddress="".trim();
-            final String username=personEmail.trim();
-            final String personId = account.getId();
-            DatabaseReference root=FirebaseDatabase.getInstance().getReference();
-            User u=new User(personName,personContact,personAddress);
-            if(!personId.isEmpty())
-                if(!checklogin2(personId))
-                    root.child("Users").child(personId).setValue(u);
-            // Signed in successfully, show authenticated UI.
-            startActivity(new Intent(login.this, UserHome.class));
+            checklogin2(account);
+
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -189,29 +178,33 @@ public class login extends AppCompatActivity {
     }
 
 
-    public boolean checklogin2(final String temp_id)
+    public void checklogin2(GoogleSignInAccount account)
     {
 
-        DatabaseReference root= FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference root= FirebaseDatabase.getInstance().getReference();
+        final String temp_id = account.getId();
+        final String personName=account.getDisplayName().trim();
+        final String personEmail=account.getEmail().trim();
+        final String personContact="".trim();
+        final String personAddress="".trim();
+        final String username=personEmail.trim();
+        final User u=new User(personName,personContact,personAddress);
         root.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.child("Users").child(temp_id).exists()==true)
+                    if(!dataSnapshot.child(temp_id).exists())
                     {
-                        flag = true;
+                        root.child(temp_id).setValue(u);
                     }
-                    else
-                    {
-                        flag= false;
-                    }
+                    startActivity(new Intent(login.this, UserHome.class));
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                    flag =false;
+
             }
         });
-        return flag;
     }
 
 }
