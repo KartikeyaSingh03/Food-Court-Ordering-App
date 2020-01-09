@@ -167,7 +167,11 @@ public class ProfileFragment extends Fragment {
                         public void onComplete(@NonNull Task<Void> task) {
                             SharedPreferencesApp.setSessionState(getContext(),"NULL");
                             Toast.makeText(getContext(), "Successfully signed out", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getContext(), CustomerMain.class));
+                            Intent in = new Intent(getContext(),CustomerMain.class);
+                            in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                    Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(in);
                             getActivity().finish();
                         }
                     });
