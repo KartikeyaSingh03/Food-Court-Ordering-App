@@ -110,7 +110,13 @@ public class OwnersProfileFragment extends Fragment {
             public void onClick(View v) {
                 getActivity().finish();
                 SharedPreferencesApp.setSessionState(getContext(),"NULL");
-                startActivity(new Intent(getContext(), MainActivity.class));
+                //startActivity(new Intent(getContext(), MainActivity.class));
+                FirebaseAuth.getInstance().signOut();
+                Intent in = new Intent(getContext(),MainActivity.class);
+                in.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(in);
                 Toast.makeText(getContext(),"Logged Out Successfully",Toast.LENGTH_LONG).show();
             }
         });
