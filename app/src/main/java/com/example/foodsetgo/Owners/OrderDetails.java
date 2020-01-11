@@ -3,6 +3,7 @@ package com.example.foodsetgo.Owners;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -89,6 +90,8 @@ public class OrderDetails extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String OrderNumRest = dataSnapshot.child("OrderNumRest").getValue(String.class);
                         root.child("Restaurants").child(RestId).child("orders").child(OrderNumRest).child("Status").setValue(status);
+                        Intent intent = new Intent(OrderDetails.this,OwnerMain.class);
+                        startActivity(intent);
                     }
 
                     @Override
