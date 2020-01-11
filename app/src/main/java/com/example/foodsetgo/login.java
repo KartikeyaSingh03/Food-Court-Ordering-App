@@ -194,7 +194,7 @@ public class login extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(!dataSnapshot.child(temp_id).exists())
                     {
-                        root.child(temp_id).setValue(u);
+                        root.child("Users").child(temp_id).setValue(u);
                     }
                     startActivity(new Intent(login.this, UserHome.class));
 

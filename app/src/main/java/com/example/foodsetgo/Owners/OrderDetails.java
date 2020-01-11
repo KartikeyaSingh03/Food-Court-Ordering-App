@@ -90,7 +90,7 @@ public class OrderDetails extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String OrderNumRest = dataSnapshot.child("OrderNumRest").getValue(String.class);
                         root.child("Restaurants").child(RestId).child("orders").child(OrderNumRest).child("Status").setValue(status);
-                        Intent intent = new Intent(OrderDetails.this,OwnerMain.class);
+                        Intent intent = new Intent(OrderDetails.this,Res_Home.class);
                         startActivity(intent);
                     }
 
