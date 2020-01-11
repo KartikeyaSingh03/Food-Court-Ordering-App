@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.foodsetgo.R;
+import com.example.foodsetgo.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,13 +28,14 @@ public class OrderDetails extends AppCompatActivity {
     FirebaseDatabase database;
     Spinner spinner;
     Button update_status;
+    String UserNo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
-        Bundle bundle = getIntent().getExtras();
+        final Bundle bundle = getIntent().getExtras();
         UserID= bundle.getString("UID");
-        OrderNo= bundle.getString("OrderNo");
+        OrderNo= bundle.getString("UserOrderNo");
         Add= findViewById(R.id.Address);
         Cont =findViewById(R.id.Contact);
         Price=findViewById(R.id.Total);
@@ -65,7 +67,7 @@ public class OrderDetails extends AppCompatActivity {
 
             }
         });
-        root.child("Restaurants").child(RestId).child("orders").child(OrderNo).addListenerForSingleValueEvent(new ValueEventListener() {
+        root.child("Restaurants").child(RestId).child("orders").child(bundle.getString("RestOrderNo")).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 price=dataSnapshot.child("GrandTotal").getValue().toString();
@@ -89,7 +91,7 @@ public class OrderDetails extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String OrderNumRest = dataSnapshot.child("OrderNumRest").getValue(String.class);
-                        root.child("Restaurants").child(RestId).child("orders").child(OrderNumRest).child("Status").setValue(status);
+                        root.child("Restaurants").child(RestId).child("orders").child(bundle.getString("RestOrderNo")).child("Status").setValue(status);
                         Intent intent = new Intent(OrderDetails.this,Res_Home.class);
                         startActivity(intent);
                     }

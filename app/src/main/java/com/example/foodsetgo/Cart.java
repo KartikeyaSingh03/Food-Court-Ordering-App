@@ -43,6 +43,8 @@ public class Cart extends AppCompatActivity {
     AlertDialog.Builder builder;
     Button placeorder;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    int NumRest;
+    int NumUser;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +72,50 @@ public class Cart extends AppCompatActivity {
         recyclerView.setAdapter(adap);
 
         builder = new AlertDialog.Builder(Cart.this);
+
+        if(firebaseAuth.getCurrentUser()!=null)
+            UserUid = firebaseAuth.getCurrentUser().getUid();
+        if(acct!=null)
+            UserUid= acct.getId();
+
+        final DatabaseReference root = FirebaseDatabase.getInstance().getReference().child("Users/"+UserUid);
+        final DatabaseReference root2 = FirebaseDatabase.getInstance().getReference().child("Restaurants/"+uid);
+
+        root.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("orders").exists()==true)
+                {
+
+                    NumRest=(int)dataSnapshot.child("orders").getChildrenCount()+1;
+                }
+                else
+                    NumRest=1;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        root2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("orders").exists()==true)
+                {
+                    NumUser=(int)dataSnapshot.child("orders").getChildrenCount()+1;
+                }
+                else
+                    NumUser=1;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
         placeorder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,105 +132,84 @@ public class Cart extends AppCompatActivity {
                     public void run() {
                         alert.dismiss();
                         t.cancel();
+
+                        root.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                if(dataSnapshot.child("orders").exists())
+                                {
+                                    dataSnapshot = dataSnapshot.child("orders");
+                                    final int size = (int)dataSnapshot.getChildrenCount()+1;
+                                    root.child("orders").child(Integer.toString(size)).child("OrderTray").setValue(cart);
+                                    root.child("orders").child(Integer.toString(size)).child("Status").setValue("Processing...");
+                                    root.child("orders").child(Integer.toString(size)).child("UID").setValue(uid);
+                                    root.child("orders").child(Integer.toString(size)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
+                                    root.child("orders").child(Integer.toString(size)).child("OrderNumRest").setValue(Integer.toString(NumUser));
+
+
+                                }
+                                else
+                                {
+                                    root.child("orders").child(Integer.toString(1)).child("OrderTray").setValue(cart);
+                                    root.child("orders").child(Integer.toString(1)).child("Status").setValue("Processing...");
+                                    root.child("orders").child(Integer.toString(1)).child("UID").setValue(uid);
+                                    root.child("orders").child(Integer.toString(1)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
+                                    root.child("orders").child(Integer.toString(1)).child("OrderNumRest").setValue(Integer.toString(NumUser));
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+                        root2.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.child("orders").exists())
+                                {
+                                    dataSnapshot = dataSnapshot.child("orders");
+                                    final int size = (int)dataSnapshot.getChildrenCount()+1;
+
+                                    root2.child("orders").child(Integer.toString(size)).child("OrderTray").setValue(cart);
+                                    root2.child("orders").child(Integer.toString(size)).child("CustUid").setValue(UserUid);
+                                    root2.child("orders").child(Integer.toString(size)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
+                                    root2.child("orders").child(Integer.toString(size)).child("Status").setValue("Processing...");
+                                    root2.child("orders").child(Integer.toString(size)).child("OrderNumUser").setValue(Integer.toString(NumRest));
+
+
+                                }
+                                else {
+                                    root2.child("orders").child(Integer.toString(1)).child("OrderTray").setValue(cart);
+                                    root2.child("orders").child(Integer.toString(1)).child("CustUid").setValue(UserUid);
+                                    root2.child("orders").child(Integer.toString(1)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
+                                    root2.child("orders").child(Integer.toString(1)).child("Status").setValue("Processing...");
+                                    root2.child("orders").child(Integer.toString(1)).child("OrderNumUser").setValue(Integer.toString(NumRest));
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+
+
+
+
+
                         finish();
                         startActivity(new Intent(Cart.this,UserHome.class));
                     }
-                },1000);
+                },2000);
 
-                if(firebaseAuth.getCurrentUser()!=null)
-                    UserUid = firebaseAuth.getCurrentUser().getUid();
-                if(acct!=null)
-                    UserUid= acct.getId();
-
-                final DatabaseReference root = FirebaseDatabase.getInstance().getReference().child("Users/"+UserUid);
-                root.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        if(dataSnapshot.child("orders").exists())
-                        {
-                            dataSnapshot = dataSnapshot.child("orders");
-                            final int size = (int)dataSnapshot.getChildrenCount()+1;
-                            root.child("orders").child(Integer.toString(size)).child("OrderTray").setValue(cart);
-                            root.child("orders").child(Integer.toString(size)).child("Status").setValue("Processing...");
-                            root.child("orders").child(Integer.toString(size)).child("UID").setValue(uid);
-                            root.child("orders").child(Integer.toString(size)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
-                            DatabaseReference r = FirebaseDatabase.getInstance().getReference().child("Restaurants").child(uid).child("orders");
-                            r.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot d) {
-                                    final int rsize = (int)d.getChildrenCount()+1;
-                                    root.child("orders").child(Integer.toString(size)).child("OrderNumRest").setValue(Integer.toString(rsize));
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-
-
-
-                        }
-                        else
-                        {
-                            root.child("orders").child(Integer.toString(1)).child("OrderTray").setValue(cart);
-                            root.child("orders").child(Integer.toString(1)).child("Status").setValue("Processing...");
-                            root.child("orders").child(Integer.toString(1)).child("UID").setValue(uid);
-                            root.child("orders").child(Integer.toString(1)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
-                            DatabaseReference r = FirebaseDatabase.getInstance().getReference().child("Restaurants").child(uid).child("orders");
-                            r.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot d) {
-                                    final int rsize = (int)d.getChildrenCount()+1;
-                                    root.child("orders").child(Integer.toString(1)).child("OrderNumRest").setValue(Integer.toString(rsize));
-
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-                final DatabaseReference root2 = FirebaseDatabase.getInstance().getReference().child("Restaurants/"+uid);
-
-                root2.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.child("orders").exists())
-                        {
-                            dataSnapshot = dataSnapshot.child("orders");
-                            int size = (int)dataSnapshot.getChildrenCount();
-                            size++;
-                            root2.child("orders").child(Integer.toString(size)).child("OrderTray").setValue(cart);
-                            root2.child("orders").child(Integer.toString(size)).child("CustUid").setValue(UserUid);
-                            root2.child("orders").child(Integer.toString(size)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
-                            root2.child("orders").child(Integer.toString(size)).child("Status").setValue("Processing...");
-                        }
-                        else {
-                            root2.child("orders").child(Integer.toString(1)).child("OrderTray").setValue(cart);
-                            root2.child("orders").child(Integer.toString(1)).child("CustUid").setValue(UserUid);
-                            root2.child("orders").child(Integer.toString(1)).child("GrandTotal").setValue(Integer.toString(GrandTotal));
-                            root2.child("orders").child(Integer.toString(1)).child("Status").setValue("Processing...");
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
 
 
 

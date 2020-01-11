@@ -42,7 +42,7 @@ public class Owners_Orders_fragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        final List<Pair<String,String>> listUsers = new ArrayList<>();
+        final List<Pair<String,Pair<String,String>>> listUsers = new ArrayList<>();
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
         root = root.child("Restaurants").child(OwnerUid);
         root.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -54,8 +54,8 @@ public class Owners_Orders_fragment extends Fragment {
                     int size = (int)d.getChildrenCount();
                     for(int i=1;i<=size;i++)
                     {
-                        DataSnapshot d1 = d.child(Integer.toString(i));
-                        Pair<String,String> user = Pair.create(d1.child("CustUid").getValue(String.class),Integer.toString(i));
+                        Pair<String,String> p = Pair.create(d.child(Integer.toString(i)).child("OrderNumUser").getValue().toString(),Integer.toString(i));
+                        Pair<String,Pair<String,String>> user = Pair.create(d.child(Integer.toString(i)).child("CustUid").getValue().toString(),p);
                         listUsers.add(user);
                     }
                     adapter = new Owners_Orders_list_adapter(listUsers,getContext());

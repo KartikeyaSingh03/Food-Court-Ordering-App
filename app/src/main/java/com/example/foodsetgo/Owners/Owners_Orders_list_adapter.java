@@ -36,10 +36,10 @@ import java.util.List;
 
 public class Owners_Orders_list_adapter extends  RecyclerView.Adapter<Owners_Orders_list_adapter.ViewHolder> {
 
-    private List<Pair<String,String>> listUser;
+    private List<Pair<String,Pair<String,String>>> listUser;
     private Context context;
 
-    public Owners_Orders_list_adapter(List<Pair<String,String>> listmenus, Context context) {
+    public Owners_Orders_list_adapter(List<Pair<String,Pair<String,String>>> listmenus, Context context) {
         this.listUser = listmenus;
         this.context = context;
     }
@@ -55,7 +55,7 @@ public class Owners_Orders_list_adapter extends  RecyclerView.Adapter<Owners_Ord
 
     @Override
     public void onBindViewHolder(@NonNull final Owners_Orders_list_adapter.ViewHolder holder, int position) {
-        final Pair<String,String> User = listUser.get(position);
+        final Pair<String,Pair<String,String>> User = listUser.get(position);
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
 
         root = root.child("Users").child(User.first);
@@ -94,7 +94,8 @@ public class Owners_Orders_list_adapter extends  RecyclerView.Adapter<Owners_Ord
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(),OrderDetails.class);
                 intent.putExtra("UID",User.first);
-                intent.putExtra("OrderNo",User.second);
+                intent.putExtra("UserOrderNo",User.second.first);
+                intent.putExtra("RestOrderNo",User.second.second);
                 view.getContext().startActivity(intent);
             }
         });
