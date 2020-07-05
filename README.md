@@ -11,14 +11,14 @@ Based On the User purpose, the App is divided into Two following Sub-categories:
    c) If you are new user:
       Make one after clicking on signup button and enter require details. 
    e) After succesfully login:
-      following are the opertion one can perform:
+      following are the operation one can perform:
       1) change password.
       2) edit details.
       3) signout.
 2) For Restaurant owner:
    click on Continue_as_owner button:
-   a) login if you had already registered or make and an account after clicking on signup button:
-   b) after succesfully login:
+   a) login if you had already registered or make an account after clicking on signup button:
+   b) after successfully login:
       following are the operation one can peform:
       1) View Menulist: present you all of your added food-items.
       2) Add-item: feature to add new food-item.
